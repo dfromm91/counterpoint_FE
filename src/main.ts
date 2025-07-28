@@ -27,6 +27,20 @@ const scoreLayouter = new ScoreLayouter(
 const staff = new GrandStaff();
 const score = new Score(staff);
 const melody = [new Note("d", 4), new Note("e", 4)];
+const cantusFirmus = [
+  new Note("c", 3),
+  new Note("d", 3),
+  new Note("e", 3),
+  new Note("f", 3),
+  new Note("g", 3),
+];
+const counterMelody = [
+  new Note("g", 4), // P5 above C
+  new Note("f", 4), // consonant 3rd above D
+  new Note("g", 4), // consonant 3rd above E
+  new Note("a", 4), // consonant 3rd above F
+  new Note("g", 4), // perfect unison with G
+];
 
 // whenever you want to add a new note:
 function addNoteToScore(note: Note) {
@@ -46,6 +60,7 @@ function addLineToScore(score: Score) {
 addNoteToScore(new Note("c", 5));
 addLineToScore(score);
 addNoteToScore(new Note("d", 5));
+cantusFirmus.forEach((element) => {});
 
 // example usage:
 // melody.forEach((note) => {

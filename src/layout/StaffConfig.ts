@@ -11,8 +11,8 @@ export interface StaffConfig {
 export const defaultStaffConfig: StaffConfig = {
   upperLeftCorner: { x: 100, y: 50 },
   width: 1000,
-  lineThickness: 3,
-  spacing: 30,
+  lineThickness: 2,
+  spacing: 20,
   horizontalNoteSpacing: 100,
   staffLineSpacing: 100,
   grandStaffSpacing: 70,
