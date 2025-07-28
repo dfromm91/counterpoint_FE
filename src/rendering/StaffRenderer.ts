@@ -5,16 +5,13 @@ import { defaultStaffConfig, StaffConfig } from "../layout/index.js";
 export class StaffRenderer {
   constructor(private renderer: Renderer) {}
 
-  /**
-   * Draws the five staff lines.
-   * @param config    Configuration for staff metrics.
-   * @param isAnimated  If true, uses animateLine; otherwise uses drawLine.
-   */
   public drawStaff(top: number, isAnimated = true): void {
-    const ctx = this.renderer.ctx; // make sure Renderer exposes this method
+    const ctx = this.renderer.ctx;
 
     ctx.textAlign = "left";
     ctx.textBaseline = "middle";
+
+    const originalTop = top; // save starting top for brace positioning
 
     for (let h = 0; h < 2; h++) {
       for (let i = 0; i < 5; i++) {
@@ -40,11 +37,11 @@ export class StaffRenderer {
         h == 0
           ? `${defaultStaffConfig.spacing * 7}px serif`
           : `${defaultStaffConfig.spacing * 6}px serif`;
-      const clefSymbol = h == 0 ? "𝄞" : "𝄢"; // Treble or Bass
+      const clefSymbol = h == 0 ? "𝄞" : "𝄢";
       const clefY =
         h == 0
           ? top + defaultStaffConfig.spacing * 2.5
-          : top + defaultStaffConfig.spacing * 2.5; // middle line
+          : top + defaultStaffConfig.spacing * 2.2;
       const clefX = defaultStaffConfig.upperLeftCorner.x;
 
       ctx.fillText(clefSymbol, clefX, clefY);
@@ -53,5 +50,24 @@ export class StaffRenderer {
       top +=
         5 * defaultStaffConfig.spacing + defaultStaffConfig.grandStaffSpacing;
     }
+
+    // Draw vertically stretched curly brace
+    const braceX =
+      defaultStaffConfig.upperLeftCorner.x - defaultStaffConfig.spacing * 1.5;
+    const braceY = originalTop;
+    const braceHeight =
+      top - originalTop - defaultStaffConfig.grandStaffSpacing * 1.5;
+
+    ctx.save(); // Save canvas state
+
+    ctx.translate(braceX, braceY);
+    ctx.scale(1, braceHeight / (defaultStaffConfig.spacing * 5)); // stretch vertically
+
+    ctx.font = `${defaultStaffConfig.spacing * 5}px serif`;
+    ctx.textAlign = "center";
+    ctx.textBaseline = "top";
+    ctx.fillText("{", 0, 0);
+
+    ctx.restore(); // Restore canvas state
   }
 }

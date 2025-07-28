@@ -46,6 +46,7 @@ function addLineToScore(score: Score) {
 addNoteToScore(new Note("c", 5));
 addLineToScore(score);
 addNoteToScore(new Note("d", 5));
+
 // example usage:
 // melody.forEach((note) => {
 //   addNoteToScore(note);
@@ -60,10 +61,3 @@ addNoteToScore(new Note("d", 5));
 // melody3.forEach((note) => {
 //   addNoteToScore(note);
 // });
-
-// if you want to clear everything and start over:
-function resetScore() {
-  staff.melody = [];
-  layouter.reset();
-  // optionally clear the canvas here...
-}
