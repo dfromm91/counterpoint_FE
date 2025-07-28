@@ -5,6 +5,7 @@ export interface StaffConfig {
   spacing: number;
   horizontalNoteSpacing: number;
   staffLineSpacing: number;
+  grandStaffSpacing: number;
 }
 
 export const defaultStaffConfig: StaffConfig = {
@@ -14,4 +15,5 @@ export const defaultStaffConfig: StaffConfig = {
   spacing: 30,
   horizontalNoteSpacing: 100,
   staffLineSpacing: 100,
+  grandStaffSpacing: 70,
 };
