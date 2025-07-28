@@ -5,7 +5,7 @@ export class ScoreLayouter {
     this.melodyLayouter = melodyLayouter;
     this.offsetY = offsetY;
   }
-  add(note: Note) {
-    return this.melodyLayouter.add(note, this.offsetY);
+  add(note: Note, clef = "treble") {
+    return this.melodyLayouter.add(note, this.offsetY, clef);
   }
 }

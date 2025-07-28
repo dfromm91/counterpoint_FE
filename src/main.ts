@@ -43,9 +43,9 @@ const counterMelody = [
 ];
 
 // whenever you want to add a new note:
-function addNoteToScore(note: Note) {
+function addNoteToScore(note: Note, clef = "treble") {
   score.addNote(note); // update your model
-  const { x, y } = scoreLayouter.add(note); // compute coords
+  const { x, y } = scoreLayouter.add(note, clef); // compute coords
   noteRenderer.drawWholeNote(x, y, defaultStaffConfig.spacing);
 }
 function addLineToScore(score: Score) {
@@ -61,6 +61,7 @@ addNoteToScore(new Note("c", 5));
 addLineToScore(score);
 addNoteToScore(new Note("d", 5));
 cantusFirmus.forEach((element) => {});
+addNoteToScore(cantusFirmus[0], "bass");
 
 // example usage:
 // melody.forEach((note) => {

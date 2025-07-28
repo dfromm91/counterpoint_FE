@@ -14,9 +14,18 @@ export class MelodyLayouter {
    * Compute where to place the next note.
    * Advances the X‐position by horizontalNoteSpacing.
    */
-  public add(note: Note, offsetY: number): { x: number; y: number } {
+  public add(
+    note: Note,
+    offsetY: number,
+    clef = "treble"
+  ): { x: number; y: number } {
     this.lastX += defaultStaffConfig.horizontalNoteSpacing;
-    const y = mapNoteToYCoordinate(note, offsetY, defaultStaffConfig.spacing);
+    const y = mapNoteToYCoordinate(
+      note,
+      offsetY,
+      defaultStaffConfig.spacing,
+      clef
+    );
     return { x: this.lastX, y };
   }
 
