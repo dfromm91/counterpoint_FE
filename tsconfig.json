@@ -6,6 +6,7 @@
     "rootDir": "./src",
     "moduleResolution": "node",
     "strict": true,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "removeComments": true
   }
 }

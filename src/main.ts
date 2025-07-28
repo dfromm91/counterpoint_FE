@@ -15,7 +15,7 @@ const noteRenderer = new NoteRenderer(ctx, renderer);
 // draw the staff once
 staffRenderer.drawStaff(
   defaultStaffConfig.upperLeftCorner.y,
-  /* isAnimated? */ false
+  /* isAnimated? */ true
 );
 
 // now set up your layout helper
@@ -37,25 +37,29 @@ function addNoteToScore(note: Note) {
 function addLineToScore(score: Score) {
   score.addLine(new GrandStaff());
   scoreLayouter.offsetY +=
-    defaultStaffConfig.spacing * 5 + defaultStaffConfig.staffLineSpacing;
+    defaultStaffConfig.spacing * 10 +
+    defaultStaffConfig.staffLineSpacing +
+    defaultStaffConfig.grandStaffSpacing;
   scoreLayouter.melodyLayouter.reset();
   staffRenderer.drawStaff(scoreLayouter.offsetY);
 }
-
+addNoteToScore(new Note("c", 5));
+addLineToScore(score);
+addNoteToScore(new Note("d", 5));
 // example usage:
-melody.forEach((note) => {
-  addNoteToScore(note);
-});
-addLineToScore(score);
-const melody2 = [new Note("e", 5), new Note("a", 4), new Note("g", 5)];
-melody2.forEach((note) => {
-  addNoteToScore(note);
-});
-const melody3 = [new Note("e", 5), new Note("d", 5), new Note("g", 4)];
-addLineToScore(score);
-melody3.forEach((note) => {
-  addNoteToScore(note);
-});
+// melody.forEach((note) => {
+//   addNoteToScore(note);
+// });
+// addLineToScore(score);
+// const melody2 = [new Note("e", 5), new Note("a", 4), new Note("g", 5)];
+// melody2.forEach((note) => {
+//   addNoteToScore(note);
+// });
+// const melody3 = [new Note("e", 5), new Note("d", 5), new Note("g", 4)];
+// addLineToScore(score);
+// melody3.forEach((note) => {
+//   addNoteToScore(note);
+// });
 
 // if you want to clear everything and start over:
 function resetScore() {
