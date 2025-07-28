@@ -23,6 +23,7 @@ export class NoteRenderer {
     this.ctx.fillStyle = "white";
 
     this.ctx.fill();
+    this.ctx.fillStyle = "black";
     const top = defaultStaffConfig.upperLeftCorner.y;
     if (Number.isInteger((y - top) / defaultStaffConfig.spacing)) {
       this.renderer.drawLine(

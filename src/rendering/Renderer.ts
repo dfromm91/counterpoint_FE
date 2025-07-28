@@ -1,7 +1,7 @@
 import { Line } from "./Line.js";
 
 export class Renderer {
-  private ctx: CanvasRenderingContext2D;
+  public ctx: CanvasRenderingContext2D;
 
   constructor(ctx: CanvasRenderingContext2D) {
     this.ctx = ctx;
