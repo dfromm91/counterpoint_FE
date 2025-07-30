@@ -28,9 +28,9 @@ const staff = new GrandStaff();
 const score = new Score(staff);
 const melody = [new Note("d", 4), new Note("e", 4)];
 const cantusFirmus = [
-  new Note("g", 4),
-  new Note("d", 3),
-  new Note("e", 3),
+  new Note("f", 4),
+  new Note("e", 4),
+  new Note("d", 4),
   new Note("f", 3),
   new Note("g", 3),
   new Note("a", 3),
@@ -40,9 +40,9 @@ const cantusFirmus = [
 ];
 const counterMelody = [
   new Note("a", 3), // P5 above C
-  new Note("f", 4), // consonant 3rd above D
-  new Note("g", 4), // consonant 3rd above E
-  new Note("a", 4), // consonant 3rd above F
+  new Note("g", 3), // consonant 3rd above D
+  new Note("b", 3), // consonant 3rd above E
+  new Note("c", 6), // consonant 3rd above F
   new Note("g", 4), // perfect unison with G
 ];
 

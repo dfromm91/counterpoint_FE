@@ -31,6 +31,16 @@ export class NoteRenderer {
       let bl = bottomLine;
       let i = y;
       if (i < tl) {
+        console.log(tl + "," + i + "," + offsetY);
+        if (
+          !Number.isInteger(
+            tl -
+              (i - defaultStaffConfig.upperLeftCorner.y) /
+                defaultStaffConfig.spacing
+          )
+        ) {
+          i -= 0.5 * defaultStaffConfig.spacing;
+        }
         while (i < tl) {
           i += defaultStaffConfig.spacing;
 
@@ -47,7 +57,15 @@ export class NoteRenderer {
         }
       }
       if (i > bl) {
-        top;
+        if (
+          !Number.isInteger(
+            tl -
+              (i - defaultStaffConfig.upperLeftCorner.y) /
+                defaultStaffConfig.spacing
+          )
+        ) {
+          i += 0.5 * defaultStaffConfig.spacing;
+        }
         while (i > bl) {
           i -= defaultStaffConfig.spacing;
 
