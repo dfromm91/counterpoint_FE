@@ -7,13 +7,13 @@ export interface StaffConfig {
   staffLineSpacing: number;
   grandStaffSpacing: number;
 }
-
+const spacing = 15;
 export const defaultStaffConfig: StaffConfig = {
   upperLeftCorner: { x: 100, y: 50 },
   width: 1000,
-  lineThickness: 2,
-  spacing: 20,
-  horizontalNoteSpacing: 100,
-  staffLineSpacing: 100,
-  grandStaffSpacing: 70,
+  lineThickness: spacing * 0.1,
+  spacing: spacing,
+  horizontalNoteSpacing: spacing * 6,
+  staffLineSpacing: spacing * 4,
+  grandStaffSpacing: spacing * 4,
 };

@@ -7,7 +7,65 @@ export class NoteRenderer {
     private renderer: Renderer
   ) {}
 
-  drawWholeNote(x: number, y: number, spacing: number): void {
+  drawWholeNote(
+    x: number,
+    y: number,
+    spacing: number,
+    clef = "treble",
+    offsetY: number = 0
+  ): void {
+    function getLedgerLines(): Line[] {
+      const ledgerLines: Line[] = [];
+      let topLine;
+      if (clef == "treble") {
+        topLine = offsetY;
+      } else {
+        topLine =
+          defaultStaffConfig.upperLeftCorner.y +
+          offsetY +
+          defaultStaffConfig.spacing +
+          defaultStaffConfig.grandStaffSpacing;
+      }
+      const bottomLine = 5 * defaultStaffConfig.spacing + topLine;
+      let tl = topLine;
+      let bl = bottomLine;
+      let i = y;
+      if (i < tl) {
+        while (i < tl) {
+          i += defaultStaffConfig.spacing;
+
+          ledgerLines.push(
+            new Line(
+              x - 1.8 * outerRadiusX,
+              i,
+              x + 1.8 * outerRadiusX,
+              i,
+              defaultStaffConfig.lineThickness,
+              "black"
+            )
+          );
+        }
+      }
+      if (i > bl) {
+        top;
+        while (i > bl) {
+          i -= defaultStaffConfig.spacing;
+
+          ledgerLines.push(
+            new Line(
+              x - 1.8 * outerRadiusX,
+              i,
+              x + 1.8 * outerRadiusX,
+              i,
+              defaultStaffConfig.lineThickness,
+              "black"
+            )
+          );
+        }
+      }
+
+      return ledgerLines;
+    }
     const outerRadiusX = spacing * 0.6;
     const outerRadiusY = spacing * 0.5;
     const innerRadiusX = spacing * 0.43;
@@ -25,17 +83,41 @@ export class NoteRenderer {
     this.ctx.fill();
     this.ctx.fillStyle = "black";
     const top = defaultStaffConfig.upperLeftCorner.y;
-    if (Number.isInteger((y - top) / defaultStaffConfig.spacing)) {
-      this.renderer.drawLine(
-        new Line(
-          x - outerRadiusX / 2,
-          y,
-          x + outerRadiusX / 2,
-          y,
-          defaultStaffConfig.lineThickness,
-          "black"
+    if (clef == "treble") {
+      if (Number.isInteger((y - top) / defaultStaffConfig.spacing)) {
+        this.renderer.drawLine(
+          new Line(
+            x - 1.8 * outerRadiusX,
+            y,
+            x + 1.8 * outerRadiusX,
+            y,
+            defaultStaffConfig.lineThickness,
+            "black"
+          )
+        );
+      }
+    } else {
+      if (
+        Number.isInteger(
+          (y - top - defaultStaffConfig.grandStaffSpacing) /
+            defaultStaffConfig.spacing
         )
-      );
+      ) {
+        this.renderer.drawLine(
+          new Line(
+            x - 1.8 * outerRadiusX,
+            y,
+            x + 1.8 * outerRadiusX,
+            y,
+            defaultStaffConfig.lineThickness,
+            "black"
+          )
+        );
+      }
     }
+
+    getLedgerLines().forEach((line) => {
+      this.renderer.drawLine(line);
+    });
   }
 }

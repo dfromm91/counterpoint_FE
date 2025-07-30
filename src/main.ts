@@ -15,7 +15,7 @@ const noteRenderer = new NoteRenderer(ctx, renderer);
 // draw the staff once
 staffRenderer.drawStaff(
   defaultStaffConfig.upperLeftCorner.y,
-  /* isAnimated? */ true
+  /* isAnimated? */ false
 );
 
 // now set up your layout helper
@@ -28,14 +28,18 @@ const staff = new GrandStaff();
 const score = new Score(staff);
 const melody = [new Note("d", 4), new Note("e", 4)];
 const cantusFirmus = [
-  new Note("c", 3),
+  new Note("g", 4),
   new Note("d", 3),
   new Note("e", 3),
   new Note("f", 3),
   new Note("g", 3),
+  new Note("a", 3),
+  new Note("b", 3),
+  new Note("e", 4),
+  new Note("g", 3),
 ];
 const counterMelody = [
-  new Note("g", 4), // P5 above C
+  new Note("a", 3), // P5 above C
   new Note("f", 4), // consonant 3rd above D
   new Note("g", 4), // consonant 3rd above E
   new Note("a", 4), // consonant 3rd above F
@@ -46,7 +50,13 @@ const counterMelody = [
 function addNoteToScore(note: Note, clef = "treble") {
   score.addNote(note); // update your model
   const { x, y } = scoreLayouter.add(note, clef); // compute coords
-  noteRenderer.drawWholeNote(x, y, defaultStaffConfig.spacing);
+  noteRenderer.drawWholeNote(
+    x,
+    y,
+    defaultStaffConfig.spacing,
+    clef,
+    scoreLayouter.offsetY
+  );
 }
 function addLineToScore(score: Score) {
   score.addLine(new GrandStaff());
@@ -57,11 +67,17 @@ function addLineToScore(score: Score) {
   scoreLayouter.melodyLayouter.reset();
   staffRenderer.drawStaff(scoreLayouter.offsetY);
 }
-addNoteToScore(new Note("c", 5));
+cantusFirmus.forEach((note) => {
+  addNoteToScore(note, "bass");
+});
 addLineToScore(score);
-addNoteToScore(new Note("d", 5));
-cantusFirmus.forEach((element) => {});
-addNoteToScore(cantusFirmus[0], "bass");
+counterMelody.forEach((note) => {
+  addNoteToScore(note);
+});
+
+// addNoteToScore(new Note("c", 5));
+// addLineToScore(score);
+// addNoteToScore(new Note("d", 5));
 
 // example usage:
 // melody.forEach((note) => {
