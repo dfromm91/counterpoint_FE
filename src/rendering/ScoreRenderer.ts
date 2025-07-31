@@ -1,9 +1,9 @@
 // src/rendering/ScoreRenderer.ts
-import { GrandStaff } from "../models/";
-import { StaffRenderer } from "./StaffRenderer";
-import { NoteRenderer } from "./NoteRenderer";
-import { StaffConfig } from "../layout";
-import { layoutMelody } from "../layout/layoutMelody";
+import { GrandStaff } from "../models/GrandStaff.js";
+import { StaffRenderer } from "./StaffRenderer.js";
+import { NoteRenderer } from "./NoteRenderer.js";
+import { StaffConfig } from "../layout/StaffConfig.js";
+import { layoutMelody } from "../layout/layoutMelody.js";
 
 export class ScoreRenderer {
   constructor(
