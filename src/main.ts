@@ -44,3 +44,5 @@ scoreController.initialize(true);
 scoreController.addNotes(cantusFirmus, "bass");
 scoreController.addNotes(counterMelody, "treble");
 scoreController.addLine(true);
+scoreController.eraseNote(0, 3, "treble");
+scoreController.eraseNote(0, 0, "bass");

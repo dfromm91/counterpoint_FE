@@ -7,12 +7,13 @@ export class NoteRenderer {
     private renderer: Renderer
   ) {}
 
-  drawWholeNote(
+  renderNote(
     x: number,
     y: number,
     spacing: number,
     clef = "treble",
-    offsetY: number = 0
+    offsetY: number = 0,
+    color: string
   ): void {
     function getLedgerLines(): Line[] {
       const ledgerLines: Line[] = [];
@@ -91,7 +92,7 @@ export class NoteRenderer {
 
     this.ctx.beginPath();
     this.ctx.ellipse(x, y, outerRadiusX, outerRadiusY, 0, 0, 2 * Math.PI);
-    this.ctx.fillStyle = "black";
+    this.ctx.fillStyle = color;
     this.ctx.fill();
 
     this.ctx.beginPath();
@@ -99,7 +100,7 @@ export class NoteRenderer {
     this.ctx.fillStyle = "white";
 
     this.ctx.fill();
-    this.ctx.fillStyle = "black";
+    this.ctx.fillStyle = color;
     const top = defaultStaffConfig.upperLeftCorner.y;
     if (clef == "treble") {
       if (Number.isInteger((y - top) / defaultStaffConfig.spacing)) {
@@ -110,7 +111,7 @@ export class NoteRenderer {
             x + 1.8 * outerRadiusX,
             y,
             defaultStaffConfig.lineThickness,
-            "black"
+            color
           )
         );
       }
@@ -128,7 +129,7 @@ export class NoteRenderer {
             x + 1.8 * outerRadiusX,
             y,
             defaultStaffConfig.lineThickness,
-            "black"
+            color
           )
         );
       }
@@ -137,5 +138,24 @@ export class NoteRenderer {
     getLedgerLines().forEach((line) => {
       this.renderer.drawLine(line);
     });
+    this.ctx.fillStyle = "black";
+  }
+  drawWholeNote(
+    x: number,
+    y: number,
+    spacing: number,
+    clef = "treble",
+    offsetY: number = 0
+  ) {
+    this.renderNote(x, y, spacing, clef, offsetY, "black");
+  }
+  eraseWholeNote(
+    x: number,
+    y: number,
+    spacing: number,
+    clef = "treble",
+    offsetY: number = 0
+  ) {
+    this.renderNote(x, y, spacing, clef, offsetY, "white");
   }
 }

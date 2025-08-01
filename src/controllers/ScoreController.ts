@@ -42,4 +42,32 @@ export class ScoreController {
       isAnimated
     );
   }
+  eraseNote(staffIndex: number, noteIndex: number, clef: string) {
+    if (clef == "bass") {
+      this.score.staffLines[staffIndex].cantusFirmus[noteIndex] =
+        new models.Note("z", -1);
+    } else if (clef == "treble") {
+      this.score.staffLines[staffIndex].melody[noteIndex] = new models.Note(
+        "z",
+        -1
+      );
+    }
+    const offsetY =
+      staffIndex *
+      (10 * layouter.defaultStaffConfig.spacing +
+        layouter.defaultStaffConfig.grandStaffSpacing +
+        layouter.defaultStaffConfig.staffLineSpacing);
+    const noteLocation = this.scoreLayouter.getNoteLocation(
+      staffIndex,
+      noteIndex,
+      clef
+    );
+    this.noteRenderer.eraseWholeNote(
+      noteLocation.x,
+      noteLocation.y,
+      layouter.defaultStaffConfig.spacing,
+      clef,
+      offsetY
+    );
+  }
 }

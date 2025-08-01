@@ -2,9 +2,13 @@
 import { Note } from "../models/index.js";
 import { defaultStaffConfig } from "./StaffConfig.js";
 import { mapNoteToYCoordinate } from "./mapNoteToYCoordinate.js";
-
+interface noteLocation {
+  x: number;
+  y: number;
+}
 export class MelodyLayouter {
   private lastX: number;
+  private noteLocations: noteLocation[] = [];
   constructor(private upperLeftX: number) {
     // start at the very left of the staff
     this.lastX = upperLeftX;
@@ -26,9 +30,12 @@ export class MelodyLayouter {
       defaultStaffConfig.spacing,
       clef
     );
-    return { x: this.lastX, y };
+    const noteLocation = { x: this.lastX, y: y };
+    return noteLocation;
   }
-
+  getNoteLocation(noteIndex: number) {
+    return this.noteLocations[noteIndex];
+  }
   /** If you ever want to clear and start over… */
   public reset(): void {
     this.lastX = defaultStaffConfig.upperLeftCorner.x;
