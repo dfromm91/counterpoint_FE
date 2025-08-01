@@ -25,7 +25,7 @@ const scoreController = new ScoreController(
   noteRenderer
 );
 const cantusFirmus: Note[] = [
-  new Note("c", 3),
+  new Note("c", 2),
   new Note("d", 3),
   new Note("e", 3),
   new Note("f", 3),
