@@ -34,6 +34,7 @@ export class ScoreController {
       layouter.defaultStaffConfig.staffLineSpacing +
       layouter.defaultStaffConfig.grandStaffSpacing;
     this.scoreLayouter.melodyLayouter.reset();
+    this.scoreLayouter.addLine();
     this.staffRenderer.drawStaff(this.scoreLayouter.offsetY, isAnimated);
   }
   initialize(isAnimated: boolean) {
@@ -68,6 +69,9 @@ export class ScoreController {
       layouter.defaultStaffConfig.spacing,
       clef,
       offsetY
+    );
+    this.staffRenderer.drawStaff(
+      offsetY + layouter.defaultStaffConfig.upperLeftCorner.y
     );
   }
 }

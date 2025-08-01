@@ -15,7 +15,8 @@ export class NoteRenderer {
     offsetY: number = 0,
     color: string
   ): void {
-    function getLedgerLines(): Line[] {
+    function getLedgerLines(color: string): Line[] {
+      const multiplier = color == "black" ? 1 : 1.4;
       const ledgerLines: Line[] = [];
       let topLine;
       if (clef == "treble") {
@@ -32,7 +33,6 @@ export class NoteRenderer {
       let bl = bottomLine;
       let i = y;
       if (i < tl) {
-        console.log(tl + "," + i + "," + offsetY);
         if (
           !Number.isInteger(
             tl -
@@ -47,12 +47,12 @@ export class NoteRenderer {
 
           ledgerLines.push(
             new Line(
-              x - 1.8 * outerRadiusX,
+              x - 1.8 * outerRadiusX * multiplier,
               i,
-              x + 1.8 * outerRadiusX,
+              x + 1.8 * outerRadiusX * multiplier,
               i,
-              defaultStaffConfig.lineThickness,
-              "black"
+              defaultStaffConfig.lineThickness * multiplier,
+              color
             )
           );
         }
@@ -72,22 +72,23 @@ export class NoteRenderer {
 
           ledgerLines.push(
             new Line(
-              x - 1.8 * outerRadiusX,
+              x - 1.8 * outerRadiusX * multiplier,
               i,
-              x + 1.8 * outerRadiusX,
+              x + 1.8 * outerRadiusX * multiplier,
               i,
-              defaultStaffConfig.lineThickness,
-              "black"
+              defaultStaffConfig.lineThickness * multiplier,
+              color
             )
           );
         }
       }
-
+      console.log(ledgerLines);
       return ledgerLines;
     }
-    const outerRadiusX = spacing * 0.6;
-    const outerRadiusY = spacing * 0.5;
-    const innerRadiusX = spacing * 0.43;
+    const multiplier = color == "black" ? 1 : 1.15;
+    const outerRadiusX = spacing * 0.6 * multiplier;
+    const outerRadiusY = spacing * 0.5 * multiplier;
+    const innerRadiusX = spacing * 0.43 * multiplier;
     const innerRadiusY = spacing * 0.25;
 
     this.ctx.beginPath();
@@ -111,7 +112,7 @@ export class NoteRenderer {
             x + 1.8 * outerRadiusX,
             y,
             defaultStaffConfig.lineThickness,
-            color
+            "black"
           )
         );
       }
@@ -129,13 +130,13 @@ export class NoteRenderer {
             x + 1.8 * outerRadiusX,
             y,
             defaultStaffConfig.lineThickness,
-            color
+            "black"
           )
         );
       }
     }
 
-    getLedgerLines().forEach((line) => {
+    getLedgerLines(color).forEach((line) => {
       this.renderer.drawLine(line);
     });
     this.ctx.fillStyle = "black";

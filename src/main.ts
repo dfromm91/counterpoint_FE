@@ -39,10 +39,14 @@ const counterMelody: Note[] = [
   new Note("a", 4),
   new Note("g", 4),
 ];
-
-scoreController.initialize(true);
+const notAnimated = false;
+const animated = true;
+scoreController.initialize(notAnimated);
 scoreController.addNotes(cantusFirmus, "bass");
 scoreController.addNotes(counterMelody, "treble");
-scoreController.addLine(true);
+scoreController.addLine(notAnimated);
+scoreController.addNote(new Note("c", 5), "treble");
 scoreController.eraseNote(0, 3, "treble");
 scoreController.eraseNote(0, 0, "bass");
+scoreController.eraseNote(1, 0, "treble");
+scoreController.addNotes([new Note("e", 5), new Note("f", 4)]);

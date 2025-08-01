@@ -28,7 +28,7 @@ export class ScoreLayouter {
     console.log(this.staffLocationData);
     return { x, y };
   }
-  addLine(staffLineLocation: number) {
+  addLine() {
     this.staffLocationData.push({ cantusFirmus: [], counterMelody: [] });
   }
   getNoteLocation(
