@@ -28,7 +28,7 @@ export class NoteRenderer {
           5*defaultStaffConfig.spacing +
           defaultStaffConfig.grandStaffSpacing;
       }
-      const bottomLine = clef=="treble"?5 * defaultStaffConfig.spacing + topLine:10*defaultStaffConfig.spacing+defaultStaffConfig.grandStaffSpacing;
+      const bottomLine =  5*defaultStaffConfig.spacing + topLine;
       let tl = topLine;
       let bl = bottomLine;
       let i = y;
@@ -54,8 +54,8 @@ export class NoteRenderer {
               i,
               x + 1.8 * outerRadiusX * multiplier,
               i,
-              defaultStaffConfig.lineThickness * multiplier,
-              color
+              Math.round(defaultStaffConfig.lineThickness * multiplier),
+              "white"
             )
           );
         }
@@ -81,8 +81,8 @@ export class NoteRenderer {
               i,
               x + 1.8 * outerRadiusX * multiplier,
               i,
-              defaultStaffConfig.lineThickness * multiplier,
-              color
+              Math.round(defaultStaffConfig.lineThickness * multiplier),
+              "red"
             )
           );
         }

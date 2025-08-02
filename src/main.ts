@@ -8,6 +8,8 @@ import { ScoreController } from "./controllers/ScoreController.js";
 
 const canvas = document.getElementById("canvas") as HTMLCanvasElement;
 const ctx = canvas.getContext("2d")!;
+ctx.imageSmoothingEnabled = false;
+
 const renderer = new Renderer(ctx);
 const staffRenderer = new StaffRenderer(renderer);
 const noteRenderer = new NoteRenderer(ctx, renderer);
@@ -26,19 +28,19 @@ const scoreController = new ScoreController(
 );
 const cantusFirmus: Note[] = [
   new Note("b", 1),
-  new Note("e", 4),
-  new Note("e", 3),
-  new Note("f", 3),
-  new Note("g", 3),
+  // new Note("e", 4),
+  // new Note("e", 3),
+  // new Note("f", 3),
+  // new Note("g", 3),
 ];
 
 const counterMelody: Note[] = [
   new Note("a", 3),
-  new Note("b", 5),
-  new Note("g", 4),
-  new Note("a", 4),
-  new Note("g", 4),
-];
+//   new Note("b", 5),
+//   new Note("g", 4),
+//   new Note("a", 4),
+//   new Note("g", 4),
+ ];
 const notAnimated = false;
 const animated = true;
 scoreController.initialize(notAnimated);

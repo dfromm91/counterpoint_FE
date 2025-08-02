@@ -25,7 +25,7 @@ export class ScoreLayouter {
       this.staffLocationData[
         this.staffLocationData.length - 1
       ].cantusFirmus.push({ x, y });
-    console.log(this.staffLocationData);
+
     return { x, y };
   }
   addLine() {
