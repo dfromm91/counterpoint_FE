@@ -75,4 +75,12 @@ export class ScoreController {
       offsetY ,false
     );
   }
+  clearStaff(staffIndex:number){
+this.scoreLayouter.staffLocationData[staffIndex].cantusFirmus.forEach((noteLocation,noteIndex) => {
+  this.eraseNote(staffIndex,noteIndex,"bass");
+});
+this.scoreLayouter.staffLocationData[staffIndex].counterMelody.forEach((noteLocation,noteIndex) => {
+  this.eraseNote(staffIndex,noteIndex,"treble");
+});
+  }
 }

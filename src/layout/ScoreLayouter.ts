@@ -7,7 +7,7 @@ interface staffLocationData {
 }
 
 export class ScoreLayouter {
-  private staffLocationData: staffLocationData[] = [
+  public staffLocationData: staffLocationData[] = [
     { cantusFirmus: [], counterMelody: [] },
   ];
   private currentStaffLine = 0;
