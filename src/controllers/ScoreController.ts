@@ -20,7 +20,7 @@ export class ScoreController {
       clef,
       this.scoreLayouter.offsetY
     );
-    this.staffRenderer.drawStaff(this.scoreLayouter.offsetY)
+    this.staffRenderer.drawStaff(this.scoreLayouter.offsetY,false)
   }
 
   addNotes(notes: models.Note[], clef: string = "treble") {
@@ -58,7 +58,7 @@ export class ScoreController {
       staffIndex *
       (10 * layouter.defaultStaffConfig.spacing +
         layouter.defaultStaffConfig.grandStaffSpacing +
-        layouter.defaultStaffConfig.staffLineSpacing);
+        layouter.defaultStaffConfig.staffLineSpacing)+layouter.defaultStaffConfig.upperLeftCorner.y;
     const noteLocation = this.scoreLayouter.getNoteLocation(
       staffIndex,
       noteIndex,
@@ -72,7 +72,7 @@ export class ScoreController {
       offsetY
     );
     this.staffRenderer.drawStaff(
-      offsetY + layouter.defaultStaffConfig.upperLeftCorner.y,false
+      offsetY ,false
     );
   }
 }

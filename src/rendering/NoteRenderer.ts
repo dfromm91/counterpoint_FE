@@ -16,7 +16,7 @@ export class NoteRenderer {
     color: string
   ): void {
     function getLedgerLines(color: string): Line[] {
-      const multiplier = color == "black" ? 1 : 1.4;
+      const multiplier = color == "black" ? 1 : 1.5;
       const ledgerLines: Line[] = [];
       let topLine;
       if (clef == "treble") {
@@ -28,7 +28,7 @@ export class NoteRenderer {
           5*defaultStaffConfig.spacing +
           defaultStaffConfig.grandStaffSpacing;
       }
-      const bottomLine = 5 * defaultStaffConfig.spacing + topLine;
+      const bottomLine = clef=="treble"?5 * defaultStaffConfig.spacing + topLine:10*defaultStaffConfig.spacing+defaultStaffConfig.grandStaffSpacing+topLine;
       let tl = topLine;
       let bl = bottomLine;
       let i = y;
@@ -40,10 +40,10 @@ export class NoteRenderer {
                 defaultStaffConfig.spacing
           )
         ) {
-          i -= 0.5 * defaultStaffConfig.spacing;
+              i -= 0.5 * defaultStaffConfig.spacing;
         }
         else{
-          i-=defaultStaffConfig.spacing
+           i-=defaultStaffConfig.spacing
         }
         while (i < tl) {
           i += defaultStaffConfig.spacing;
