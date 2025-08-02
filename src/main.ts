@@ -8,7 +8,7 @@ import { ScoreController } from "./controllers/ScoreController.js";
 import { ButtonRenderer } from "./rendering/ButtonRenderer.js";
 const canvas = document.getElementById("canvas") as HTMLCanvasElement;
 const ctx = canvas.getContext("2d")!;
-ctx.imageSmoothingEnabled = false;
+
 
 const renderer = new Renderer(ctx);
 const staffRenderer = new StaffRenderer(renderer);
@@ -48,15 +48,16 @@ const counterMelody: Note[] = [
 const notAnimated = false;
 const animated = true;
 scoreController.initialize(notAnimated);
-scoreController.addNotes(cantusFirmus, "bass");
+// scoreController.addNotes(cantusFirmus, "bass");
 // scoreController.clearStaff(0);
-scoreController.addLine(notAnimated)
-scoreController.addNotes(counterMelody, "treble");
+// scoreController.addLine(notAnimated)
+// scoreController.addNotes(counterMelody, "treble");
 // scoreController.clearStaff(1);
 
 
-// scoreController.addNote(counterMelody[0],"treble");
+scoreController.addNote(counterMelody[4],"treble");
 // scoreController.addNote(counterMelody[1],"treble");
+
 canvas.addEventListener("click", (event: MouseEvent) => {
   const rect = canvas.getBoundingClientRect(); // get canvas position
   const x = event.clientX - rect.left;
@@ -64,9 +65,11 @@ canvas.addEventListener("click", (event: MouseEvent) => {
 
   if(scoreController.buttonLayouter.isInTopArrow(x,y,defaultStaffConfig.spacing)){
     console.log('top arrow clicked')
+    scoreController.updateLastNote(1)
   }
   if(scoreController.buttonLayouter.isInBottomArrow(x,y,defaultStaffConfig.spacing)){
     console.log('bottom arrow clicked')
+    scoreController.updateLastNote(-1)
   }
 
 });

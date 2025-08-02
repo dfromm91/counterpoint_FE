@@ -1,8 +1,9 @@
 import * as models from "../models/index.js";
 import * as renderers from "../rendering/index.js";
 import * as layouter from "../layout/index.js";
-
+import { noteNamesDescending } from "../constants/pitches.js";
 export class ScoreController {
+  
   constructor(
     private score: models.Score,
     private scoreLayouter: layouter.ScoreLayouter,
@@ -13,7 +14,10 @@ export class ScoreController {
   ) {}
 
   addNote(note: models.Note, clef: string = "treble") {
-    this.score.addNote(note);
+    console.log(note)
+    this.score.showNotes()
+    this.score.addNote(note,clef);
+
     const { x, y } = this.scoreLayouter.add(note, clef);
 
 
@@ -32,7 +36,7 @@ export class ScoreController {
       this.scoreLayouter.offsetY
     );
     this.staffRenderer.drawStaff(this.scoreLayouter.offsetY,false)
-
+  
   }
 
   addNotes(notes: models.Note[], clef: string = "treble") {
@@ -58,15 +62,15 @@ export class ScoreController {
 
   }
   eraseNote(staffIndex: number, noteIndex: number, clef: string) {
-    if (clef == "bass") {
-      this.score.staffLines[staffIndex].cantusFirmus[noteIndex] =
-        new models.Note("z", -1);
-    } else if (clef == "treble") {
-      this.score.staffLines[staffIndex].melody[noteIndex] = new models.Note(
-        "z",
-        -1
-      );
-    }
+    // if (clef == "bass") {
+    //   this.score.staffLines[staffIndex].cantusFirmus[noteIndex] =
+    //     new models.Note("z", -1);
+    // } else if (clef == "treble") {
+    //   this.score.staffLines[staffIndex].melody[noteIndex] = new models.Note(
+    //     "z",
+    //     -1
+    //   );
+    // }
     const offsetY =
       staffIndex *
       (10 * layouter.defaultStaffConfig.spacing +
@@ -95,5 +99,32 @@ this.scoreLayouter.staffLocationData[staffIndex].cantusFirmus.forEach((noteLocat
 this.scoreLayouter.staffLocationData[staffIndex].counterMelody.forEach((noteLocation,noteIndex) => {
   this.eraseNote(staffIndex,noteIndex,"treble");
 });
+  }
+  updateLastNote(increment:number){
+    const lastNoteIndex = this.scoreLayouter.currentNoteIndex;
+    const lastStaffIndex = this.scoreLayouter.currentStaffLine;
+    const lastNoteLocation = this.scoreLayouter.getNoteLocation(lastStaffIndex,lastNoteIndex,"treble");
+
+    this.eraseNote(lastStaffIndex,lastNoteIndex,"treble")
+    this.noteRenderer.drawWholeNote(lastNoteLocation.x,lastNoteLocation.y-increment*layouter.defaultStaffConfig.spacing*0.5,layouter.defaultStaffConfig.spacing,"treble",this.scoreLayouter.offsetY);
+    this.scoreLayouter.staffLocationData[lastStaffIndex].counterMelody[lastNoteIndex].y-=increment*layouter.defaultStaffConfig.spacing*0.5
+    this.staffRenderer.drawStaff(this.scoreLayouter.offsetY,false)
+    const lastNoteLetter=this.score.staffLines[lastStaffIndex].melody[lastNoteIndex].pitchClass;
+    const lastNoteRegister = this.score.staffLines[lastStaffIndex].melody[lastNoteIndex].octave;
+    let newNoteLetterIndex = (noteNamesDescending.indexOf(lastNoteLetter)-increment)%7;
+    let newNoteRegister=lastNoteRegister;
+    if (newNoteLetterIndex==-1){
+      newNoteLetterIndex=6
+    }
+    const newNoteLetter = noteNamesDescending[newNoteLetterIndex]
+    if(increment==1&&newNoteLetter=="c"){
+      newNoteRegister+=1;
+    }
+    if(increment==-1&&newNoteLetter=="b"){
+      newNoteRegister-=1;
+    }
+    const newNote = new models.Note(newNoteLetter,newNoteRegister);
+    this.score.staffLines[lastStaffIndex].melody[lastNoteIndex]=newNote;
+    console.log(newNote)
   }
 }

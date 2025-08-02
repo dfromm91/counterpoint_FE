@@ -8,18 +8,21 @@ export function mapNoteToYCoordinate(
   spacing: number,
   clef: string = "treble"
 ): number {
-  if (clef == "treble") {
-    let noteIndex = noteNamesDescending.indexOf(note.pitchClass);
-    if (noteIndex > 3) note.octave++; // Adjust gap between B-C
-    return topY + (spacing / 2) * noteIndex + 3.5 * spacing * (5 - note.octave);
+  const pitchClass = note.pitchClass;
+  let octave = note.octave;
+  let noteIndex = noteNamesDescending.indexOf(pitchClass);
+
+  if (clef === "treble") {
+    if (noteIndex > 3) octave++; // adjust visually but DO NOT mutate
+    return topY + (spacing / 2) * noteIndex + 3.5 * spacing * (5 - octave);
   } else {
-    let noteIndex = noteNamesDescending.indexOf(note.pitchClass) - 2;
-    if (noteIndex > 1) note.octave++; // Adjust gap between B-C
+    noteIndex -= 2;
+    if (noteIndex > 1) octave++; // again, visual-only adjustment
     return (
       topY +
       defaultStaffConfig.grandStaffSpacing +
       (spacing / 2) * noteIndex +
-      3.5 * spacing * (5 - note.octave)
+      3.5 * spacing * (5 - octave)
     );
   }
 }

@@ -7,29 +7,34 @@ interface staffLocationData {
 }
 
 export class ScoreLayouter {
+  
   public staffLocationData: staffLocationData[] = [
     { cantusFirmus: [], counterMelody: [] },
   ];
-  private currentStaffLine = 0;
+  public currentStaffLine = 0;
+  public currentNoteIndex = -1;
   constructor(public melodyLayouter: MelodyLayouter, public offsetY: number) {
     this.melodyLayouter = melodyLayouter;
     this.offsetY = offsetY;
   }
   add(note: Note, clef = "treble") {
     const { x, y } = this.melodyLayouter.add(note, this.offsetY, clef);
-    if (clef == "treble")
+    
+    if (clef == "treble"){
+      this.currentNoteIndex+=1;
       this.staffLocationData[
         this.staffLocationData.length - 1
-      ].counterMelody.push({ x, y });
-    if (clef == "bass")
+      ].counterMelody.push({ x, y });}
+    if (clef == "bass"){
       this.staffLocationData[
         this.staffLocationData.length - 1
-      ].cantusFirmus.push({ x, y });
+      ].cantusFirmus.push({ x, y });}
 
     return { x, y };
   }
   addLine() {
     this.staffLocationData.push({ cantusFirmus: [], counterMelody: [] });
+    this.currentStaffLine+=1;
   }
   getNoteLocation(
     staffIndex: number,
