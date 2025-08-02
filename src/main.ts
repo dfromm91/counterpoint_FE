@@ -33,7 +33,7 @@ const cantusFirmus: Note[] = [
 ];
 
 const counterMelody: Note[] = [
-  new Note("b", 5),
+  new Note("a", 3),
   new Note("b", 5),
   new Note("g", 4),
   new Note("a", 4),
@@ -44,6 +44,6 @@ const animated = true;
 scoreController.initialize(notAnimated);
 scoreController.addNotes(cantusFirmus, "bass");
 scoreController.addNotes(counterMelody, "treble");
-scoreController.clearStaff(0);
+// scoreController.clearStaff(0);
 scoreController.addLine(animated);
 

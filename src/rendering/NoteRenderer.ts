@@ -28,7 +28,7 @@ export class NoteRenderer {
           5*defaultStaffConfig.spacing +
           defaultStaffConfig.grandStaffSpacing;
       }
-      const bottomLine = clef=="treble"?5 * defaultStaffConfig.spacing + topLine:10*defaultStaffConfig.spacing+defaultStaffConfig.grandStaffSpacing+topLine;
+      const bottomLine = clef=="treble"?5 * defaultStaffConfig.spacing + topLine:10*defaultStaffConfig.spacing+defaultStaffConfig.grandStaffSpacing;
       let tl = topLine;
       let bl = bottomLine;
       let i = y;
