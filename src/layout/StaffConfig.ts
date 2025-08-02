@@ -11,7 +11,7 @@ const spacing = 15;
 export const defaultStaffConfig: StaffConfig = {
   upperLeftCorner: { x: 100, y: 50 },
   width: 1000,
-  lineThickness: spacing * 0.1,
+  lineThickness: 1,
   spacing: spacing,
   horizontalNoteSpacing: spacing * 6,
   staffLineSpacing: spacing * 4,
