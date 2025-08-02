@@ -20,6 +20,7 @@ export class ScoreController {
       clef,
       this.scoreLayouter.offsetY
     );
+    this.staffRenderer.drawStaff(this.scoreLayouter.offsetY)
   }
 
   addNotes(notes: models.Note[], clef: string = "treble") {
@@ -71,7 +72,7 @@ export class ScoreController {
       offsetY
     );
     this.staffRenderer.drawStaff(
-      offsetY + layouter.defaultStaffConfig.upperLeftCorner.y
+      offsetY + layouter.defaultStaffConfig.upperLeftCorner.y,false
     );
   }
 }

@@ -23,9 +23,9 @@ export class NoteRenderer {
         topLine = offsetY;
       } else {
         topLine =
-          defaultStaffConfig.upperLeftCorner.y +
+        
           offsetY +
-          defaultStaffConfig.spacing +
+          5*defaultStaffConfig.spacing +
           defaultStaffConfig.grandStaffSpacing;
       }
       const bottomLine = 5 * defaultStaffConfig.spacing + topLine;
@@ -41,6 +41,9 @@ export class NoteRenderer {
           )
         ) {
           i -= 0.5 * defaultStaffConfig.spacing;
+        }
+        else{
+          i-=defaultStaffConfig.spacing
         }
         while (i < tl) {
           i += defaultStaffConfig.spacing;
@@ -66,6 +69,8 @@ export class NoteRenderer {
           )
         ) {
           i += 0.5 * defaultStaffConfig.spacing;
+        }else{
+          i+=defaultStaffConfig.spacing
         }
         while (i > bl) {
           i -= defaultStaffConfig.spacing;
@@ -103,38 +108,7 @@ export class NoteRenderer {
     this.ctx.fill();
     this.ctx.fillStyle = color;
     const top = defaultStaffConfig.upperLeftCorner.y;
-    if (clef == "treble") {
-      if (Number.isInteger((y - top) / defaultStaffConfig.spacing)) {
-        this.renderer.drawLine(
-          new Line(
-            x - 1.8 * outerRadiusX,
-            y,
-            x + 1.8 * outerRadiusX,
-            y,
-            defaultStaffConfig.lineThickness,
-            "black"
-          )
-        );
-      }
-    } else {
-      if (
-        Number.isInteger(
-          (y - top - defaultStaffConfig.grandStaffSpacing) /
-            defaultStaffConfig.spacing
-        )
-      ) {
-        this.renderer.drawLine(
-          new Line(
-            x - 1.8 * outerRadiusX,
-            y,
-            x + 1.8 * outerRadiusX,
-            y,
-            defaultStaffConfig.lineThickness,
-            "black"
-          )
-        );
-      }
-    }
+   
 
     getLedgerLines(color).forEach((line) => {
       this.renderer.drawLine(line);

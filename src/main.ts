@@ -25,16 +25,16 @@ const scoreController = new ScoreController(
   noteRenderer
 );
 const cantusFirmus: Note[] = [
-  new Note("c", 2),
-  new Note("d", 3),
+  new Note("b", 1),
+  new Note("e", 4),
   new Note("e", 3),
   new Note("f", 3),
   new Note("g", 3),
 ];
 
 const counterMelody: Note[] = [
-  new Note("e", 4),
-  new Note("f", 4),
+  new Note("a", 3),
+  new Note("d", 6),
   new Note("g", 4),
   new Note("a", 4),
   new Note("g", 4),
