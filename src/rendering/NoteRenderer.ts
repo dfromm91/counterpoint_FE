@@ -94,7 +94,7 @@ export class NoteRenderer {
     
       return ledgerLines;
     }
-    const multiplier = color == "black" ? 1 : 1.15;
+    const multiplier = color == "black" ? 1 : color=="gray"?1:1.15;
     const outerRadiusX = spacing * 0.6 * multiplier;
     const outerRadiusY = spacing * 0.5 * multiplier;
     const innerRadiusX = spacing * 0.43 * multiplier;
@@ -136,5 +136,14 @@ export class NoteRenderer {
     offsetY: number = 0
   ) {
     this.renderNote(x, y, spacing, clef, offsetY, "white");
+  }
+  selectWholeNote(
+    x: number,
+    y: number,
+    spacing: number,
+    clef = "treble",
+    offsetY: number = 0
+  ) {
+    this.renderNote(x, y, spacing, clef, offsetY, "gray");
   }
 }

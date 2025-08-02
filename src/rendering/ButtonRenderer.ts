@@ -8,6 +8,7 @@ export class ButtonRenderer {
   drawArrowButtons(center: { x: number; y: number }, staffSpacing: number) {
     const buttonWidth = staffSpacing;
     const buttonHeight = staffSpacing * 1.5;
+    const spacing = staffSpacing * 0.5;
     const shadowOffset = 2;
 
     const drawArrow = (
@@ -23,33 +24,29 @@ export class ButtonRenderer {
         x,
         y + height / 2
       );
-      gradient.addColorStop(0, "#a8e063"); // light green
-      gradient.addColorStop(1, "#56ab2f"); // darker green
+      gradient.addColorStop(0, "#a8e063");
+      gradient.addColorStop(1, "#56ab2f");
 
       this.ctx.save();
-
-      // Shadow
       this.ctx.shadowColor = "rgba(0, 0, 0, 0.3)";
       this.ctx.shadowBlur = 4;
       this.ctx.shadowOffsetX = shadowOffset;
       this.ctx.shadowOffsetY = shadowOffset;
 
-      // Arrow
       this.ctx.beginPath();
       if (isUp) {
-        this.ctx.moveTo(x, y - height / 2); // top point
-        this.ctx.lineTo(x - width / 2, y + height / 2); // bottom left
-        this.ctx.lineTo(x + width / 2, y + height / 2); // bottom right
+        this.ctx.moveTo(x, y - height / 2);
+        this.ctx.lineTo(x - width / 2, y + height / 2);
+        this.ctx.lineTo(x + width / 2, y + height / 2);
       } else {
-        this.ctx.moveTo(x, y + height / 2); // bottom point
-        this.ctx.lineTo(x - width / 2, y - height / 2); // top left
-        this.ctx.lineTo(x + width / 2, y - height / 2); // top right
+        this.ctx.moveTo(x, y + height / 2);
+        this.ctx.lineTo(x - width / 2, y - height / 2);
+        this.ctx.lineTo(x + width / 2, y - height / 2);
       }
       this.ctx.closePath();
 
       this.ctx.fillStyle = gradient;
       this.ctx.fill();
-
       this.ctx.lineWidth = 1.5;
       this.ctx.strokeStyle = "#333";
       this.ctx.stroke();
@@ -57,27 +54,50 @@ export class ButtonRenderer {
       this.ctx.restore();
     };
 
-    // Draw up arrow
-    drawArrow(true, center.x, center.y, buttonWidth, buttonHeight);
+    const drawCheckmark = (x: number, y: number, size: number) => {
+      this.ctx.save();
+      this.ctx.strokeStyle = "#28a745"; // green
+      this.ctx.lineWidth = 6;
+      this.ctx.lineCap = "round";
 
-    // Draw down arrow
-    const downCenterY = center.y + buttonHeight + staffSpacing * 0.5;
+      this.ctx.beginPath();
+      this.ctx.moveTo(x - size * 0.4, y + size * 0.1);
+      this.ctx.lineTo(x - size * 0.1, y + size * 0.4);
+      this.ctx.lineTo(x + size * 0.5, y - size * 0.3);
+      this.ctx.stroke();
+
+      this.ctx.restore();
+    };
+
+    // Draw up and down arrows
+    drawArrow(true, center.x, center.y, buttonWidth, buttonHeight);
+    const downCenterY = center.y + buttonHeight + spacing;
     drawArrow(false, center.x, downCenterY, buttonWidth, buttonHeight);
+
+    // Draw checkmark to the right of arrows
+    const checkmarkSize = staffSpacing * 1.2;
+    const checkmarkX = center.x + buttonWidth + spacing * 2;
+    const checkmarkY = center.y + buttonHeight * 0.5;
+
+    drawCheckmark(checkmarkX, checkmarkY, checkmarkSize);
   }
+
   eraseArrowButtons(center: { x: number; y: number }, staffSpacing: number) {
     const buttonWidth = staffSpacing;
     const buttonHeight = staffSpacing * 1.5;
     const spacing = staffSpacing * 0.5;
+    const checkmarkSize = staffSpacing * 1.2;
     const totalHeight = buttonHeight * 2 + spacing;
-  
-    const padding = 10; // extra space around the buttons
-  
+
+    const padding = 10;
+
+    const rightMost = center.x + buttonWidth + spacing * 2 + checkmarkSize + padding;
+
     this.ctx.clearRect(
       center.x - buttonWidth / 2 - padding,
       center.y - buttonHeight / 2 - padding,
-      buttonWidth + padding * 2,
+      rightMost - (center.x - buttonWidth / 2 - padding),
       totalHeight + padding * 2
     );
   }
-  
 }

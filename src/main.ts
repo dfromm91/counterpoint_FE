@@ -71,5 +71,9 @@ canvas.addEventListener("click", (event: MouseEvent) => {
     console.log('bottom arrow clicked')
     scoreController.updateLastNote(-1)
   }
+  if(scoreController.buttonLayouter.isInCheckmark(x,y,defaultStaffConfig.spacing)){
+    console.log("check clicked")
+    scoreController.confirmNote();
+  }
 
 });

@@ -28,7 +28,7 @@ export class ScoreController {
       this.buttonRenderer.drawArrowButtons({x:nextButtonX,y:buttonY},layouter.defaultStaffConfig.spacing)
       this.buttonLayouter.updateButtonCenter({x:nextButtonX,y:buttonY})
     }
-    this.noteRenderer.drawWholeNote(
+    this.noteRenderer.selectWholeNote(
       x,
       y,
       layouter.defaultStaffConfig.spacing,
@@ -106,7 +106,7 @@ this.scoreLayouter.staffLocationData[staffIndex].counterMelody.forEach((noteLoca
     const lastNoteLocation = this.scoreLayouter.getNoteLocation(lastStaffIndex,lastNoteIndex,"treble");
 
     this.eraseNote(lastStaffIndex,lastNoteIndex,"treble")
-    this.noteRenderer.drawWholeNote(lastNoteLocation.x,lastNoteLocation.y-increment*layouter.defaultStaffConfig.spacing*0.5,layouter.defaultStaffConfig.spacing,"treble",this.scoreLayouter.offsetY);
+    this.noteRenderer.selectWholeNote(lastNoteLocation.x,lastNoteLocation.y-increment*layouter.defaultStaffConfig.spacing*0.5,layouter.defaultStaffConfig.spacing,"treble",this.scoreLayouter.offsetY);
     this.scoreLayouter.staffLocationData[lastStaffIndex].counterMelody[lastNoteIndex].y-=increment*layouter.defaultStaffConfig.spacing*0.5
     this.staffRenderer.drawStaff(this.scoreLayouter.offsetY,false)
     const lastNoteLetter=this.score.staffLines[lastStaffIndex].melody[lastNoteIndex].pitchClass;
@@ -127,4 +127,14 @@ this.scoreLayouter.staffLocationData[staffIndex].counterMelody.forEach((noteLoca
     this.score.staffLines[lastStaffIndex].melody[lastNoteIndex]=newNote;
     console.log(newNote)
   }
-}
+  confirmNote(){
+    const lastNoteIndex = this.scoreLayouter.currentNoteIndex;
+    const lastStaffIndex = this.scoreLayouter.currentStaffLine;
+    const lastNoteLetter=this.score.staffLines[lastStaffIndex].melody[lastNoteIndex].pitchClass;
+    const lastNoteRegister = this.score.staffLines[lastStaffIndex].melody[lastNoteIndex].octave;  
+    const newNote = new models.Note(lastNoteLetter,lastNoteRegister);
+    const {x,y} = this.scoreLayouter.getNoteLocation(lastStaffIndex,lastNoteIndex,"treble");
+    this.noteRenderer.drawWholeNote(x,y,layouter.defaultStaffConfig.spacing,"treble",this.scoreLayouter.offsetY)
+    this.addNote(newNote,"treble");
+  }
+  }
