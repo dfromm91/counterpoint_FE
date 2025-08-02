@@ -7,12 +7,23 @@ export class ScoreController {
     private score: models.Score,
     private scoreLayouter: layouter.ScoreLayouter,
     private staffRenderer: renderers.StaffRenderer,
-    private noteRenderer: renderers.NoteRenderer
+    private noteRenderer: renderers.NoteRenderer,
+    private buttonRenderer: renderers.ButtonRenderer,
+    public buttonLayouter: layouter.ButtonLayouter
   ) {}
 
   addNote(note: models.Note, clef: string = "treble") {
     this.score.addNote(note);
     const { x, y } = this.scoreLayouter.add(note, clef);
+
+
+    if(clef=="treble"){
+      const nextButtonX = x+layouter.defaultStaffConfig.horizontalNoteSpacing;
+      const buttonY = this.scoreLayouter.offsetY+layouter.defaultStaffConfig.spacing;
+      this.buttonRenderer.eraseArrowButtons({x:x,y:buttonY},layouter.defaultStaffConfig.spacing)
+      this.buttonRenderer.drawArrowButtons({x:nextButtonX,y:buttonY},layouter.defaultStaffConfig.spacing)
+      this.buttonLayouter.updateButtonCenter({x:nextButtonX,y:buttonY})
+    }
     this.noteRenderer.drawWholeNote(
       x,
       y,
@@ -21,6 +32,7 @@ export class ScoreController {
       this.scoreLayouter.offsetY
     );
     this.staffRenderer.drawStaff(this.scoreLayouter.offsetY,false)
+
   }
 
   addNotes(notes: models.Note[], clef: string = "treble") {
@@ -43,6 +55,7 @@ export class ScoreController {
       layouter.defaultStaffConfig.upperLeftCorner.y,
       isAnimated
     );
+
   }
   eraseNote(staffIndex: number, noteIndex: number, clef: string) {
     if (clef == "bass") {

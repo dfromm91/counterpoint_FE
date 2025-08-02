@@ -28,7 +28,8 @@ export class NoteRenderer {
           5*defaultStaffConfig.spacing +
           defaultStaffConfig.grandStaffSpacing;
       }
-      const bottomLine =  5*defaultStaffConfig.spacing + topLine;
+      const blMultiplier = clef=="treble"?4:5
+      const bottomLine =  blMultiplier*defaultStaffConfig.spacing + topLine;
       let tl = topLine;
       let bl = bottomLine;
       let i = y;
@@ -55,12 +56,13 @@ export class NoteRenderer {
               x + 1.8 * outerRadiusX * multiplier,
               i,
               Math.round(defaultStaffConfig.lineThickness * multiplier),
-              "white"
+              color
             )
           );
         }
       }
       if (i > bl) {
+        
         if (
           !Number.isInteger(
             tl -
@@ -68,8 +70,10 @@ export class NoteRenderer {
                 defaultStaffConfig.spacing
           )
         ) {
+          
           i += 0.5 * defaultStaffConfig.spacing;
         }else{
+       
           i+=defaultStaffConfig.spacing
         }
         while (i > bl) {
@@ -82,12 +86,12 @@ export class NoteRenderer {
               x + 1.8 * outerRadiusX * multiplier,
               i,
               Math.round(defaultStaffConfig.lineThickness * multiplier),
-              "red"
+              color
             )
           );
         }
       }
-      console.log(ledgerLines);
+    
       return ledgerLines;
     }
     const multiplier = color == "black" ? 1 : 1.15;
