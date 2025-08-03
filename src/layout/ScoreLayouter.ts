@@ -11,7 +11,7 @@ export class ScoreLayouter {
     { cantusFirmus: [], counterMelody: [] },
   ];
   public currentStaffLine = 0;
-  public currentNoteIndex = -1;
+  public currentNoteIndex = 0;
   constructor(public melodyLayouter: MelodyLayouter, public offsetY: number) {
     this.melodyLayouter = melodyLayouter;
     this.offsetY = offsetY;
@@ -36,6 +36,7 @@ export class ScoreLayouter {
   addLine() {
     this.staffLocationData.push({ cantusFirmus: [], counterMelody: [] });
     this.currentStaffLine += 1;
+    this.currentNoteIndex = 0;
   }
   getNoteLocation(
     staffIndex: number,

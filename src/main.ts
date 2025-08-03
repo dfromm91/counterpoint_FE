@@ -30,8 +30,8 @@ const scoreController = new ScoreController(
   buttonLayouter
 );
 const cantusFirmus: Note[] = [
-  new Note("b", 1),
-  new Note("e", 4),
+  new Note("b", 2),
+  new Note("e", 3),
   new Note("e", 3),
   new Note("f", 3),
   new Note("g", 3),
@@ -49,7 +49,7 @@ const animated = true;
 scoreController.initialize(notAnimated);
 scoreController.addNotes(cantusFirmus, "bass");
 // scoreController.clearStaff(0);
-// scoreController.addLine(notAnimated)
+// scoreController.addLine(notAnimated);
 // scoreController.addNotes(counterMelody, "treble");
 // scoreController.clearStaff(1);
 
