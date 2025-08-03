@@ -7,7 +7,7 @@ export class StaffRenderer {
 
   public drawStaff(top: number, isAnimated = true, drawClef = false): void {
     const ctx = this.renderer.ctx;
-
+    ctx.fillStyle = "black";
     ctx.textAlign = "left";
     ctx.textBaseline = "middle";
 

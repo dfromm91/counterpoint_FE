@@ -16,7 +16,7 @@ export class NoteRenderer {
     color: string
   ): void {
     function getLedgerLines(color: string): Line[] {
-      const multiplier = color == "black" ? 1 : color == "gray" ? 1 : 1.5;
+      const multiplier = color == "white" ? 1.5 : 1;
       const ledgerLines: Line[] = [];
       let topLine;
       if (clef == "treble") {
@@ -89,7 +89,7 @@ export class NoteRenderer {
 
       return ledgerLines;
     }
-    const multiplier = color == "black" ? 1 : color == "gray" ? 1 : 1.15;
+    const multiplier = color == "white" ? 1.15 : 1;
     const outerRadiusX = spacing * 0.6 * multiplier;
     const outerRadiusY = spacing * 0.5 * multiplier;
     const innerRadiusX = spacing * 0.43 * multiplier;
@@ -130,6 +130,7 @@ export class NoteRenderer {
     offsetY: number = 0
   ) {
     this.renderNote(x, y, spacing, clef, offsetY, "white");
+    this.ctx.fillStyle = "black";
   }
   selectWholeNote(
     x: number,
@@ -139,5 +140,6 @@ export class NoteRenderer {
     offsetY: number = 0
   ) {
     this.renderNote(x, y, spacing, clef, offsetY, "gray");
+    this.ctx.fillStyle = "black";
   }
 }

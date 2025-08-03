@@ -17,7 +17,29 @@ export class ScoreController {
     this.score.addNote(note, clef);
     const { x, y } = this.scoreLayouter.add(note, clef);
     const nextButtonX = x + layouter.defaultStaffConfig.horizontalNoteSpacing;
-
+    if (
+      x >
+      layouter.defaultStaffConfig.width +
+        layouter.defaultStaffConfig.horizontalNoteSpacing
+    ) {
+      const buttonY =
+        this.scoreLayouter.offsetY + layouter.defaultStaffConfig.spacing;
+      this.buttonRenderer.eraseArrowButtons(
+        {
+          x: x,
+          y: buttonY,
+        },
+        layouter.defaultStaffConfig.spacing
+      );
+      this.addLine(false);
+      this.addNote(note, clef, type);
+      this.staffRenderer.drawStaff(
+        buttonY - layouter.defaultStaffConfig.spacing,
+        false,
+        false
+      );
+      return;
+    }
     if (clef == "treble") {
       const buttonY =
         this.scoreLayouter.offsetY + layouter.defaultStaffConfig.spacing;
@@ -48,13 +70,13 @@ export class ScoreController {
         this.scoreLayouter.offsetY
       );
     }
-
     this.staffRenderer.drawStaff(this.scoreLayouter.offsetY, false);
   }
 
   addNotes(notes: models.Note[], clef: string = "treble") {
-    notes.forEach((note) => this.addNote(note, clef));
-    this.scoreLayouter.melodyLayouter.reset();
+    notes.forEach((note, i) =>
+      this.addNote(note, clef, i == notes.length - 1 ? "select" : "draw")
+    );
   }
 
   addLine(isAnimated: boolean) {
@@ -63,7 +85,6 @@ export class ScoreController {
       layouter.defaultStaffConfig.spacing * 10 +
       layouter.defaultStaffConfig.staffLineSpacing +
       layouter.defaultStaffConfig.grandStaffSpacing;
-    // this.scoreLayouter.currentStaffLine += 1;
     this.scoreLayouter.melodyLayouter.reset();
     this.scoreLayouter.addLine();
     this.staffRenderer.drawStaff(this.scoreLayouter.offsetY, isAnimated, true);
@@ -76,15 +97,6 @@ export class ScoreController {
     );
   }
   eraseNote(staffIndex: number, noteIndex: number, clef: string) {
-    // if (clef == "bass") {
-    //   this.score.staffLines[staffIndex].cantusFirmus[noteIndex] =
-    //     new models.Note("z", -1);
-    // } else if (clef == "treble") {
-    //   this.score.staffLines[staffIndex].melody[noteIndex] = new models.Note(
-    //     "z",
-    //     -1
-    //   );
-    // }
     const offsetY =
       staffIndex *
         (10 * layouter.defaultStaffConfig.spacing +
@@ -186,10 +198,6 @@ export class ScoreController {
       "treble",
       this.scoreLayouter.offsetY
     );
-
-    if (x > layouter.defaultStaffConfig.width) {
-      this.addLine(true);
-    }
     this.addNote(newNote, "treble", "select");
   }
 }
