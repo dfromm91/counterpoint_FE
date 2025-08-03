@@ -16,7 +16,7 @@ export class NoteRenderer {
     color: string
   ): void {
     function getLedgerLines(color: string): Line[] {
-      const multiplier = color == "black" ? 1 : 1.5;
+      const multiplier = color == "black" ? 1 : "gray"?1:1.5;
       const ledgerLines: Line[] = [];
       let topLine;
       if (clef == "treble") {

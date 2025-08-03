@@ -14,14 +14,14 @@ export class ScoreController {
   ) {}
 
   addNote(note: models.Note, clef: string = "treble",type:string ="draw") {
+    
     console.log(note)
     this.score.showNotes()
     this.score.addNote(note,clef);
-
     const { x, y } = this.scoreLayouter.add(note, clef);
-
     if(clef=="treble"){
-      const nextButtonX = x+layouter.defaultStaffConfig.horizontalNoteSpacing;
+     const nextButtonX = x+layouter.defaultStaffConfig.horizontalNoteSpacing;
+
       const buttonY = this.scoreLayouter.offsetY+layouter.defaultStaffConfig.spacing;
       this.buttonRenderer.eraseArrowButtons({x:x,y:buttonY},layouter.defaultStaffConfig.spacing)
       this.buttonRenderer.drawArrowButtons({x:nextButtonX,y:buttonY},layouter.defaultStaffConfig.spacing)
@@ -43,6 +43,7 @@ export class ScoreController {
         this.scoreLayouter.offsetY
       )
     }
+
     this.staffRenderer.drawStaff(this.scoreLayouter.offsetY,false)
   
   }
@@ -60,7 +61,7 @@ export class ScoreController {
       layouter.defaultStaffConfig.grandStaffSpacing;
     this.scoreLayouter.melodyLayouter.reset();
     this.scoreLayouter.addLine();
-    this.staffRenderer.drawStaff(this.scoreLayouter.offsetY, isAnimated);
+    this.staffRenderer.drawStaff(this.scoreLayouter.offsetY, isAnimated,true);
   }
   initialize(isAnimated: boolean) {
     this.staffRenderer.drawStaff(
