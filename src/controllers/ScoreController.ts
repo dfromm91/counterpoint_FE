@@ -3,7 +3,6 @@ import * as renderers from "../rendering/index.js";
 import * as layouter from "../layout/index.js";
 import { noteNamesDescending } from "../constants/pitches.js";
 export class ScoreController {
-  
   constructor(
     private score: models.Score,
     private scoreLayouter: layouter.ScoreLayouter,
@@ -13,39 +12,45 @@ export class ScoreController {
     public buttonLayouter: layouter.ButtonLayouter
   ) {}
 
-  addNote(note: models.Note, clef: string = "treble",type:string ="draw") {
-    
-    console.log(note)
-    this.score.showNotes()
-    this.score.addNote(note,clef);
+  addNote(note: models.Note, clef: string = "treble", type: string = "draw") {
+    console.log(note);
+    this.score.showNotes();
+    this.score.addNote(note, clef);
     const { x, y } = this.scoreLayouter.add(note, clef);
-    if(clef=="treble"){
-     const nextButtonX = x+layouter.defaultStaffConfig.horizontalNoteSpacing;
+    if (clef == "treble") {
+      const nextButtonX = x + layouter.defaultStaffConfig.horizontalNoteSpacing;
 
-      const buttonY = this.scoreLayouter.offsetY+layouter.defaultStaffConfig.spacing;
-      this.buttonRenderer.eraseArrowButtons({x:x,y:buttonY},layouter.defaultStaffConfig.spacing)
-      this.buttonRenderer.drawArrowButtons({x:nextButtonX,y:buttonY},layouter.defaultStaffConfig.spacing)
-      this.buttonLayouter.updateButtonCenter({x:nextButtonX,y:buttonY})
+      const buttonY =
+        this.scoreLayouter.offsetY + layouter.defaultStaffConfig.spacing;
+      this.buttonRenderer.eraseArrowButtons(
+        { x: x, y: buttonY },
+        layouter.defaultStaffConfig.spacing
+      );
+      this.buttonRenderer.drawArrowButtons(
+        { x: nextButtonX, y: buttonY },
+        layouter.defaultStaffConfig.spacing
+      );
+      this.buttonLayouter.updateButtonCenter({ x: nextButtonX, y: buttonY });
     }
-    if (type=="draw"){
-    this.noteRenderer.drawWholeNote(
-      x,
-      y,
-      layouter.defaultStaffConfig.spacing,
-      clef,
-      this.scoreLayouter.offsetY
-    );}else{
+    if (type == "draw") {
+      this.noteRenderer.drawWholeNote(
+        x,
+        y,
+        layouter.defaultStaffConfig.spacing,
+        clef,
+        this.scoreLayouter.offsetY
+      );
+    } else {
       this.noteRenderer.selectWholeNote(
         x,
         y,
         layouter.defaultStaffConfig.spacing,
         clef,
         this.scoreLayouter.offsetY
-      )
+      );
     }
 
-    this.staffRenderer.drawStaff(this.scoreLayouter.offsetY,false)
-  
+    this.staffRenderer.drawStaff(this.scoreLayouter.offsetY, false);
   }
 
   addNotes(notes: models.Note[], clef: string = "treble") {
@@ -61,14 +66,14 @@ export class ScoreController {
       layouter.defaultStaffConfig.grandStaffSpacing;
     this.scoreLayouter.melodyLayouter.reset();
     this.scoreLayouter.addLine();
-    this.staffRenderer.drawStaff(this.scoreLayouter.offsetY, isAnimated,true);
+    this.staffRenderer.drawStaff(this.scoreLayouter.offsetY, isAnimated, true);
   }
   initialize(isAnimated: boolean) {
     this.staffRenderer.drawStaff(
       layouter.defaultStaffConfig.upperLeftCorner.y,
-      isAnimated,true
+      isAnimated,
+      true
     );
-
   }
   eraseNote(staffIndex: number, noteIndex: number, clef: string) {
     // if (clef == "bass") {
@@ -82,9 +87,10 @@ export class ScoreController {
     // }
     const offsetY =
       staffIndex *
-      (10 * layouter.defaultStaffConfig.spacing +
-        layouter.defaultStaffConfig.grandStaffSpacing +
-        layouter.defaultStaffConfig.staffLineSpacing)+layouter.defaultStaffConfig.upperLeftCorner.y;
+        (10 * layouter.defaultStaffConfig.spacing +
+          layouter.defaultStaffConfig.grandStaffSpacing +
+          layouter.defaultStaffConfig.staffLineSpacing) +
+      layouter.defaultStaffConfig.upperLeftCorner.y;
     const noteLocation = this.scoreLayouter.getNoteLocation(
       staffIndex,
       noteIndex,
@@ -97,53 +103,83 @@ export class ScoreController {
       clef,
       offsetY
     );
-    this.staffRenderer.drawStaff(
-      offsetY ,false
+    this.staffRenderer.drawStaff(offsetY, false);
+  }
+  clearStaff(staffIndex: number) {
+    this.scoreLayouter.staffLocationData[staffIndex].cantusFirmus.forEach(
+      (noteLocation, noteIndex) => {
+        this.eraseNote(staffIndex, noteIndex, "bass");
+      }
+    );
+    this.scoreLayouter.staffLocationData[staffIndex].counterMelody.forEach(
+      (noteLocation, noteIndex) => {
+        this.eraseNote(staffIndex, noteIndex, "treble");
+      }
     );
   }
-  clearStaff(staffIndex:number){
-this.scoreLayouter.staffLocationData[staffIndex].cantusFirmus.forEach((noteLocation,noteIndex) => {
-  this.eraseNote(staffIndex,noteIndex,"bass");
-});
-this.scoreLayouter.staffLocationData[staffIndex].counterMelody.forEach((noteLocation,noteIndex) => {
-  this.eraseNote(staffIndex,noteIndex,"treble");
-});
-  }
-  updateLastNote(increment:number){
+  updateLastNote(increment: number) {
     const lastNoteIndex = this.scoreLayouter.currentNoteIndex;
     const lastStaffIndex = this.scoreLayouter.currentStaffLine;
-    const lastNoteLocation = this.scoreLayouter.getNoteLocation(lastStaffIndex,lastNoteIndex,"treble");
+    const lastNoteLocation = this.scoreLayouter.getNoteLocation(
+      lastStaffIndex,
+      lastNoteIndex,
+      "treble"
+    );
 
-    this.eraseNote(lastStaffIndex,lastNoteIndex,"treble")
-    this.noteRenderer.selectWholeNote(lastNoteLocation.x,lastNoteLocation.y-increment*layouter.defaultStaffConfig.spacing*0.5,layouter.defaultStaffConfig.spacing,"treble",this.scoreLayouter.offsetY);
-    this.scoreLayouter.staffLocationData[lastStaffIndex].counterMelody[lastNoteIndex].y-=increment*layouter.defaultStaffConfig.spacing*0.5
-    this.staffRenderer.drawStaff(this.scoreLayouter.offsetY,false)
-    const lastNoteLetter=this.score.staffLines[lastStaffIndex].melody[lastNoteIndex].pitchClass;
-    const lastNoteRegister = this.score.staffLines[lastStaffIndex].melody[lastNoteIndex].octave;
-    let newNoteLetterIndex = (noteNamesDescending.indexOf(lastNoteLetter)-increment)%7;
-    let newNoteRegister=lastNoteRegister;
-    if (newNoteLetterIndex==-1){
-      newNoteLetterIndex=6
+    this.eraseNote(lastStaffIndex, lastNoteIndex, "treble");
+    this.noteRenderer.selectWholeNote(
+      lastNoteLocation.x,
+      lastNoteLocation.y -
+        increment * layouter.defaultStaffConfig.spacing * 0.5,
+      layouter.defaultStaffConfig.spacing,
+      "treble",
+      this.scoreLayouter.offsetY
+    );
+    this.scoreLayouter.staffLocationData[lastStaffIndex].counterMelody[
+      lastNoteIndex
+    ].y -= increment * layouter.defaultStaffConfig.spacing * 0.5;
+    this.staffRenderer.drawStaff(this.scoreLayouter.offsetY, false);
+    const lastNoteLetter =
+      this.score.staffLines[lastStaffIndex].melody[lastNoteIndex].pitchClass;
+    const lastNoteRegister =
+      this.score.staffLines[lastStaffIndex].melody[lastNoteIndex].octave;
+    let newNoteLetterIndex =
+      (noteNamesDescending.indexOf(lastNoteLetter) - increment) % 7;
+    let newNoteRegister = lastNoteRegister;
+    if (newNoteLetterIndex == -1) {
+      newNoteLetterIndex = 6;
     }
-    const newNoteLetter = noteNamesDescending[newNoteLetterIndex]
-    if(increment==1&&newNoteLetter=="c"){
-      newNoteRegister+=1;
+    const newNoteLetter = noteNamesDescending[newNoteLetterIndex];
+    if (increment == 1 && newNoteLetter == "c") {
+      newNoteRegister += 1;
     }
-    if(increment==-1&&newNoteLetter=="b"){
-      newNoteRegister-=1;
+    if (increment == -1 && newNoteLetter == "b") {
+      newNoteRegister -= 1;
     }
-    const newNote = new models.Note(newNoteLetter,newNoteRegister);
-    this.score.staffLines[lastStaffIndex].melody[lastNoteIndex]=newNote;
-    console.log(newNote)
+    const newNote = new models.Note(newNoteLetter, newNoteRegister);
+    this.score.staffLines[lastStaffIndex].melody[lastNoteIndex] = newNote;
+    console.log(newNote);
   }
-  confirmNote(){
+  confirmNote() {
     const lastNoteIndex = this.scoreLayouter.currentNoteIndex;
     const lastStaffIndex = this.scoreLayouter.currentStaffLine;
-    const lastNoteLetter=this.score.staffLines[lastStaffIndex].melody[lastNoteIndex].pitchClass;
-    const lastNoteRegister = this.score.staffLines[lastStaffIndex].melody[lastNoteIndex].octave;  
-    const newNote = new models.Note(lastNoteLetter,lastNoteRegister);
-    const {x,y} = this.scoreLayouter.getNoteLocation(lastStaffIndex,lastNoteIndex,"treble");
-    this.noteRenderer.drawWholeNote(x,y,layouter.defaultStaffConfig.spacing,"treble",this.scoreLayouter.offsetY)
-    this.addNote(newNote,"treble","select");
+    const lastNoteLetter =
+      this.score.staffLines[lastStaffIndex].melody[lastNoteIndex].pitchClass;
+    const lastNoteRegister =
+      this.score.staffLines[lastStaffIndex].melody[lastNoteIndex].octave;
+    const newNote = new models.Note(lastNoteLetter, lastNoteRegister);
+    const { x, y } = this.scoreLayouter.getNoteLocation(
+      lastStaffIndex,
+      lastNoteIndex,
+      "treble"
+    );
+    this.noteRenderer.drawWholeNote(
+      x,
+      y,
+      layouter.defaultStaffConfig.spacing,
+      "treble",
+      this.scoreLayouter.offsetY
+    );
+    this.addNote(newNote, "treble", "select");
   }
-  }
+}

@@ -91,7 +91,8 @@ export class ButtonRenderer {
 
     const padding = 10;
 
-    const rightMost = center.x + buttonWidth + spacing * 2 + checkmarkSize + padding;
+    const rightMost =
+      center.x + buttonWidth + spacing * 2 + checkmarkSize + padding;
 
     this.ctx.clearRect(
       center.x - buttonWidth / 2 - padding,

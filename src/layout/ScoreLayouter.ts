@@ -7,7 +7,6 @@ interface staffLocationData {
 }
 
 export class ScoreLayouter {
-  
   public staffLocationData: staffLocationData[] = [
     { cantusFirmus: [], counterMelody: [] },
   ];
@@ -19,22 +18,24 @@ export class ScoreLayouter {
   }
   add(note: Note, clef = "treble") {
     const { x, y } = this.melodyLayouter.add(note, this.offsetY, clef);
-    
-    if (clef == "treble"){
-      this.currentNoteIndex+=1;
+
+    if (clef == "treble") {
+      this.currentNoteIndex += 1;
       this.staffLocationData[
         this.staffLocationData.length - 1
-      ].counterMelody.push({ x, y });}
-    if (clef == "bass"){
+      ].counterMelody.push({ x, y });
+    }
+    if (clef == "bass") {
       this.staffLocationData[
         this.staffLocationData.length - 1
-      ].cantusFirmus.push({ x, y });}
+      ].cantusFirmus.push({ x, y });
+    }
 
     return { x, y };
   }
   addLine() {
     this.staffLocationData.push({ cantusFirmus: [], counterMelody: [] });
-    this.currentStaffLine+=1;
+    this.currentStaffLine += 1;
   }
   getNoteLocation(
     staffIndex: number,

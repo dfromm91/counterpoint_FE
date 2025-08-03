@@ -9,13 +9,12 @@ import { ButtonRenderer } from "./rendering/ButtonRenderer.js";
 const canvas = document.getElementById("canvas") as HTMLCanvasElement;
 const ctx = canvas.getContext("2d")!;
 
-
 const renderer = new Renderer(ctx);
 const staffRenderer = new StaffRenderer(renderer);
 const noteRenderer = new NoteRenderer(ctx, renderer);
 const layouter = new MelodyLayouter(defaultStaffConfig.upperLeftCorner.x);
 const buttonRenderer = new ButtonRenderer(ctx);
-const buttonLayouter = new ButtonLayouter({x:0,y:0})
+const buttonLayouter = new ButtonLayouter({ x: 0, y: 0 });
 const scoreLayouter = new ScoreLayouter(
   layouter,
   defaultStaffConfig.upperLeftCorner.y
@@ -27,8 +26,8 @@ const scoreController = new ScoreController(
   scoreLayouter,
   staffRenderer,
   noteRenderer,
-buttonRenderer,
-buttonLayouter
+  buttonRenderer,
+  buttonLayouter
 );
 const cantusFirmus: Note[] = [
   new Note("b", 1),
@@ -44,7 +43,7 @@ const counterMelody: Note[] = [
   new Note("e", 4),
   new Note("f", 4),
   new Note("g", 4),
- ];
+];
 const notAnimated = false;
 const animated = true;
 scoreController.initialize(notAnimated);
@@ -54,8 +53,7 @@ scoreController.addNotes(cantusFirmus, "bass");
 // scoreController.addNotes(counterMelody, "treble");
 // scoreController.clearStaff(1);
 
-
-scoreController.addNote(counterMelody[4],"treble","select");
+scoreController.addNote(counterMelody[4], "treble", "select");
 // scoreController.addNote(counterMelody[1],"treble");
 
 canvas.addEventListener("click", (event: MouseEvent) => {
@@ -63,17 +61,34 @@ canvas.addEventListener("click", (event: MouseEvent) => {
   const x = event.clientX - rect.left;
   const y = event.clientY - rect.top;
 
-  if(scoreController.buttonLayouter.isInTopArrow(x,y,defaultStaffConfig.spacing)){
-    console.log('top arrow clicked')
-    scoreController.updateLastNote(1)
+  if (
+    scoreController.buttonLayouter.isInTopArrow(
+      x,
+      y,
+      defaultStaffConfig.spacing
+    )
+  ) {
+    console.log("top arrow clicked");
+    scoreController.updateLastNote(1);
   }
-  if(scoreController.buttonLayouter.isInBottomArrow(x,y,defaultStaffConfig.spacing)){
-    console.log('bottom arrow clicked')
-    scoreController.updateLastNote(-1)
+  if (
+    scoreController.buttonLayouter.isInBottomArrow(
+      x,
+      y,
+      defaultStaffConfig.spacing
+    )
+  ) {
+    console.log("bottom arrow clicked");
+    scoreController.updateLastNote(-1);
   }
-  if(scoreController.buttonLayouter.isInCheckmark(x,y,defaultStaffConfig.spacing)){
-    console.log("check clicked")
+  if (
+    scoreController.buttonLayouter.isInCheckmark(
+      x,
+      y,
+      defaultStaffConfig.spacing
+    )
+  ) {
+    console.log("check clicked");
     scoreController.confirmNote();
   }
-
 });

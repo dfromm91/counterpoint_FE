@@ -16,20 +16,19 @@ export class NoteRenderer {
     color: string
   ): void {
     function getLedgerLines(color: string): Line[] {
-      const multiplier = color == "black" ? 1 : "gray"?1:1.5;
+      const multiplier = color == "black" ? 1 : color == "gray" ? 1 : 1.5;
       const ledgerLines: Line[] = [];
       let topLine;
       if (clef == "treble") {
         topLine = offsetY;
       } else {
         topLine =
-        
           offsetY +
-          5*defaultStaffConfig.spacing +
+          5 * defaultStaffConfig.spacing +
           defaultStaffConfig.grandStaffSpacing;
       }
-      const blMultiplier = clef=="treble"?4:5
-      const bottomLine =  blMultiplier*defaultStaffConfig.spacing + topLine;
+      const blMultiplier = clef == "treble" ? 4 : 5;
+      const bottomLine = blMultiplier * defaultStaffConfig.spacing + topLine;
       let tl = topLine;
       let bl = bottomLine;
       let i = y;
@@ -41,10 +40,9 @@ export class NoteRenderer {
                 defaultStaffConfig.spacing
           )
         ) {
-              i -= 0.5 * defaultStaffConfig.spacing;
-        }
-        else{
-           i-=defaultStaffConfig.spacing
+          i -= 0.5 * defaultStaffConfig.spacing;
+        } else {
+          i -= defaultStaffConfig.spacing;
         }
         while (i < tl) {
           i += defaultStaffConfig.spacing;
@@ -62,7 +60,6 @@ export class NoteRenderer {
         }
       }
       if (i > bl) {
-        
         if (
           !Number.isInteger(
             tl -
@@ -70,11 +67,9 @@ export class NoteRenderer {
                 defaultStaffConfig.spacing
           )
         ) {
-          
           i += 0.5 * defaultStaffConfig.spacing;
-        }else{
-       
-          i+=defaultStaffConfig.spacing
+        } else {
+          i += defaultStaffConfig.spacing;
         }
         while (i > bl) {
           i -= defaultStaffConfig.spacing;
@@ -91,10 +86,10 @@ export class NoteRenderer {
           );
         }
       }
-    
+
       return ledgerLines;
     }
-    const multiplier = color == "black" ? 1 : color=="gray"?1:1.15;
+    const multiplier = color == "black" ? 1 : color == "gray" ? 1 : 1.15;
     const outerRadiusX = spacing * 0.6 * multiplier;
     const outerRadiusY = spacing * 0.5 * multiplier;
     const innerRadiusX = spacing * 0.43 * multiplier;
@@ -112,7 +107,6 @@ export class NoteRenderer {
     this.ctx.fill();
     this.ctx.fillStyle = color;
     const top = defaultStaffConfig.upperLeftCorner.y;
-   
 
     getLedgerLines(color).forEach((line) => {
       this.renderer.drawLine(line);

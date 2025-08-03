@@ -5,7 +5,7 @@ import { defaultStaffConfig, StaffConfig } from "../layout/index.js";
 export class StaffRenderer {
   constructor(private renderer: Renderer) {}
 
-  public drawStaff(top: number, isAnimated = true, drawClef=false): void {
+  public drawStaff(top: number, isAnimated = true, drawClef = false): void {
     const ctx = this.renderer.ctx;
 
     ctx.textAlign = "left";
@@ -31,7 +31,7 @@ export class StaffRenderer {
           this.renderer.drawLine(line);
         }
       }
-      
+
       // Draw clef
       ctx.font =
         h == 0
@@ -43,32 +43,33 @@ export class StaffRenderer {
           ? top + defaultStaffConfig.spacing * 2.5
           : top + defaultStaffConfig.spacing * 2.2;
       const clefX = defaultStaffConfig.upperLeftCorner.x;
-if(drawClef){
-      ctx.fillText(clefSymbol, clefX, clefY);}
+      if (drawClef) {
+        ctx.fillText(clefSymbol, clefX, clefY);
+      }
 
       // Move down for the second staff in the grand staff
       top +=
         5 * defaultStaffConfig.spacing + defaultStaffConfig.grandStaffSpacing;
     }
-if(drawClef){
-    // Draw vertically stretched curly brace
-    const braceX =
-      defaultStaffConfig.upperLeftCorner.x - defaultStaffConfig.spacing * 1.5;
-    const braceY = originalTop;
-    const braceHeight =
-      top - originalTop - defaultStaffConfig.grandStaffSpacing * 1.5;
+    if (drawClef) {
+      // Draw vertically stretched curly brace
+      const braceX =
+        defaultStaffConfig.upperLeftCorner.x - defaultStaffConfig.spacing * 1.5;
+      const braceY = originalTop;
+      const braceHeight =
+        top - originalTop - defaultStaffConfig.grandStaffSpacing * 1.5;
 
-    ctx.save(); // Save canvas state
+      ctx.save(); // Save canvas state
 
-    ctx.translate(braceX, braceY);
-    ctx.scale(1, braceHeight / (defaultStaffConfig.spacing * 5)); // stretch vertically
+      ctx.translate(braceX, braceY);
+      ctx.scale(1, braceHeight / (defaultStaffConfig.spacing * 5)); // stretch vertically
 
-    ctx.font = `${defaultStaffConfig.spacing * 5}px serif`;
-    ctx.textAlign = "center";
-    ctx.textBaseline = "top";
-    ctx.fillText("{", 0, 0);
+      ctx.font = `${defaultStaffConfig.spacing * 5}px serif`;
+      ctx.textAlign = "center";
+      ctx.textBaseline = "top";
+      ctx.fillText("{", 0, 0);
 
-    ctx.restore(); // Restore canvas state
+      ctx.restore(); // Restore canvas state
     }
   }
 }

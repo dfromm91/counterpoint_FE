@@ -11,16 +11,14 @@ export class Score {
     this.staffLines.push(staffLine);
     this.workingStaffLine += 1;
   }
-  addNote(note: Note, clef:string="treble") {
-
-    if(clef=="treble"){
-    this.staffLines[this.workingStaffLine].melody.push(note);
-    }
-    else{
-      this.staffLines[this.workingStaffLine].cantusFirmus.push(note)
+  addNote(note: Note, clef: string = "treble") {
+    if (clef == "treble") {
+      this.staffLines[this.workingStaffLine].melody.push(note);
+    } else {
+      this.staffLines[this.workingStaffLine].cantusFirmus.push(note);
     }
   }
-  showNotes(){
+  showNotes() {
     console.log(this.staffLines);
   }
 }
