@@ -13,13 +13,12 @@ export class ScoreController {
     public buttonLayouter: layouter.ButtonLayouter
   ) {}
 
-  addNote(note: models.Note, clef: string = "treble") {
+  addNote(note: models.Note, clef: string = "treble",type:string ="draw") {
     console.log(note)
     this.score.showNotes()
     this.score.addNote(note,clef);
 
     const { x, y } = this.scoreLayouter.add(note, clef);
-
 
     if(clef=="treble"){
       const nextButtonX = x+layouter.defaultStaffConfig.horizontalNoteSpacing;
@@ -28,13 +27,22 @@ export class ScoreController {
       this.buttonRenderer.drawArrowButtons({x:nextButtonX,y:buttonY},layouter.defaultStaffConfig.spacing)
       this.buttonLayouter.updateButtonCenter({x:nextButtonX,y:buttonY})
     }
-    this.noteRenderer.selectWholeNote(
+    if (type=="draw"){
+    this.noteRenderer.drawWholeNote(
       x,
       y,
       layouter.defaultStaffConfig.spacing,
       clef,
       this.scoreLayouter.offsetY
-    );
+    );}else{
+      this.noteRenderer.selectWholeNote(
+        x,
+        y,
+        layouter.defaultStaffConfig.spacing,
+        clef,
+        this.scoreLayouter.offsetY
+      )
+    }
     this.staffRenderer.drawStaff(this.scoreLayouter.offsetY,false)
   
   }
@@ -57,7 +65,7 @@ export class ScoreController {
   initialize(isAnimated: boolean) {
     this.staffRenderer.drawStaff(
       layouter.defaultStaffConfig.upperLeftCorner.y,
-      isAnimated
+      isAnimated,true
     );
 
   }
@@ -135,6 +143,6 @@ this.scoreLayouter.staffLocationData[staffIndex].counterMelody.forEach((noteLoca
     const newNote = new models.Note(lastNoteLetter,lastNoteRegister);
     const {x,y} = this.scoreLayouter.getNoteLocation(lastStaffIndex,lastNoteIndex,"treble");
     this.noteRenderer.drawWholeNote(x,y,layouter.defaultStaffConfig.spacing,"treble",this.scoreLayouter.offsetY)
-    this.addNote(newNote,"treble");
+    this.addNote(newNote,"treble","select");
   }
   }
