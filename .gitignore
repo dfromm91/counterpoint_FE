@@ -1,5 +1,6 @@
-# Ignore build output
-dist/
+# Ignore build output except index.html
+dist/*
+!dist/index.html
 
 # Ignore dependencies
 node_modules/
