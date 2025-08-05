@@ -13,8 +13,6 @@ export class ScoreController {
   ) {}
 
   addNote(note: models.Note, clef: string = "treble", type: string = "draw") {
-    this.score.showNotes();
-    this.score.addNote(note, clef);
     const { x, y } = this.scoreLayouter.add(note, clef);
     const nextButtonX = x + layouter.defaultStaffConfig.horizontalNoteSpacing;
     if (
@@ -31,46 +29,61 @@ export class ScoreController {
         },
         layouter.defaultStaffConfig.spacing
       );
-      this.addLine(false);
-      this.addNote(note, clef, type);
-      this.staffRenderer.drawStaff(
-        buttonY - layouter.defaultStaffConfig.spacing,
-        false,
-        false
-      );
-      return;
-    }
-    if (clef == "treble") {
-      const buttonY =
-        this.scoreLayouter.offsetY + layouter.defaultStaffConfig.spacing;
-      this.buttonRenderer.eraseArrowButtons(
-        { x: x, y: buttonY },
-        layouter.defaultStaffConfig.spacing
-      );
-      this.buttonRenderer.drawArrowButtons(
-        { x: nextButtonX, y: buttonY },
-        layouter.defaultStaffConfig.spacing
-      );
-      this.buttonLayouter.updateButtonCenter({ x: nextButtonX, y: buttonY });
-    }
-    if (type == "draw") {
-      this.noteRenderer.drawWholeNote(
-        x,
-        y,
-        layouter.defaultStaffConfig.spacing,
-        clef,
-        this.scoreLayouter.offsetY
-      );
+      if (
+        this.scoreLayouter.currentStaffLine ==
+        this.scoreLayouter.staffLocationData.length - 1
+      ) {
+        this.addLine(false);
+        this.addNote(note, clef, type);
+        this.staffRenderer.drawStaff(
+          buttonY - layouter.defaultStaffConfig.spacing,
+          false,
+          false
+        );
+
+        return;
+      } else {
+        console.log("moving cursor to existing line");
+        this.setCursor(this.scoreLayouter.currentStaffLine + 1, 0);
+        this.addNote(note, clef);
+        this.score.showNotes();
+        return;
+      }
     } else {
-      this.noteRenderer.selectWholeNote(
-        x,
-        y,
-        layouter.defaultStaffConfig.spacing,
-        clef,
-        this.scoreLayouter.offsetY
-      );
+      this.score.addNote(note, clef);
+      this.score.showNotes();
+      if (clef == "treble") {
+        const buttonY =
+          this.scoreLayouter.offsetY + layouter.defaultStaffConfig.spacing;
+        this.buttonRenderer.eraseArrowButtons(
+          { x: x, y: buttonY },
+          layouter.defaultStaffConfig.spacing
+        );
+        this.buttonRenderer.drawArrowButtons(
+          { x: nextButtonX, y: buttonY },
+          layouter.defaultStaffConfig.spacing
+        );
+        this.buttonLayouter.updateButtonCenter({ x: nextButtonX, y: buttonY });
+      }
+      if (type == "draw") {
+        this.noteRenderer.drawWholeNote(
+          x,
+          y,
+          layouter.defaultStaffConfig.spacing,
+          clef,
+          this.scoreLayouter.offsetY
+        );
+      } else {
+        this.noteRenderer.selectWholeNote(
+          x,
+          y,
+          layouter.defaultStaffConfig.spacing,
+          clef,
+          this.scoreLayouter.offsetY
+        );
+      }
+      this.staffRenderer.drawStaff(this.scoreLayouter.offsetY, false);
     }
-    this.staffRenderer.drawStaff(this.scoreLayouter.offsetY, false);
   }
 
   addNotes(notes: models.Note[], clef: string = "treble") {
@@ -132,6 +145,7 @@ export class ScoreController {
   updateLastNote(increment: number) {
     const lastNoteIndex = this.scoreLayouter.currentNoteIndex - 1;
     const lastStaffIndex = this.scoreLayouter.currentStaffLine;
+
     const lastNoteLocation = this.scoreLayouter.getNoteLocation(
       lastStaffIndex,
       lastNoteIndex,
@@ -174,10 +188,6 @@ export class ScoreController {
   confirmNote() {
     let lastNoteIndex = this.scoreLayouter.currentNoteIndex - 1;
     let lastStaffIndex = this.scoreLayouter.currentStaffLine;
-    if (lastNoteIndex == 0) {
-      console.log("wrapped");
-    }
-
     const lastNoteLetter =
       this.score.staffLines[lastStaffIndex].melody[lastNoteIndex].pitchClass;
     const lastNoteRegister =
@@ -199,5 +209,10 @@ export class ScoreController {
       this.scoreLayouter.offsetY
     );
     this.addNote(newNote, "treble", "select");
+  }
+  setCursor(staffIndex: number, noteIndex: number) {
+    this.scoreLayouter.setCursor(staffIndex, noteIndex);
+    this.scoreLayouter.melodyLayouter.setCursor(noteIndex);
+    this.score.setCursor(staffIndex);
   }
 }

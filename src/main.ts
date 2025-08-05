@@ -35,6 +35,9 @@ const cantusFirmus: Note[] = [
   new Note("e", 3),
   new Note("f", 3),
   new Note("g", 3),
+  new Note("e", 3),
+  new Note("f", 3),
+  new Note("g", 3),
 ];
 
 const counterMelody: Note[] = [
@@ -47,13 +50,13 @@ const counterMelody: Note[] = [
 const notAnimated = false;
 const animated = true;
 scoreController.initialize(notAnimated);
-scoreController.addNotes(counterMelody, "treble");
+scoreController.addNotes(cantusFirmus, "bass");
 // scoreController.clearStaff(0);
 // scoreController.addLine(notAnimated);
 // scoreController.addNotes(counterMelody, "treble");
 // scoreController.clearStaff(1);
-
-// scoreController.addNote(counterMelody[4], "treble", "select");
+scoreController.setCursor(0, 0);
+scoreController.addNote(counterMelody[4], "treble", "select");
 // scoreController.addNote(counterMelody[1],"treble");
 
 canvas.addEventListener("click", (event: MouseEvent) => {

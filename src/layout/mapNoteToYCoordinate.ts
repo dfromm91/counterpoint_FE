@@ -13,11 +13,11 @@ export function mapNoteToYCoordinate(
   let noteIndex = noteNamesDescending.indexOf(pitchClass);
 
   if (clef === "treble") {
-    if (noteIndex > 3) octave++; // adjust visually but DO NOT mutate
+    if (noteIndex > 3) octave++;
     return topY + (spacing / 2) * noteIndex + 3.5 * spacing * (5 - octave);
   } else {
     noteIndex -= 2;
-    if (noteIndex > 1) octave++; // again, visual-only adjustment
+    if (noteIndex > 1) octave++;
     return (
       topY +
       defaultStaffConfig.grandStaffSpacing +

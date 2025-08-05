@@ -40,4 +40,7 @@ export class MelodyLayouter {
   public reset(): void {
     this.lastX = defaultStaffConfig.upperLeftCorner.x;
   }
+  public setCursor(noteIndex: number) {
+    this.reset();
+  }
 }

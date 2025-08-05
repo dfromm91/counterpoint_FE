@@ -21,4 +21,7 @@ export class Score {
   showNotes() {
     console.log(this.staffLines);
   }
+  setCursor(staffIndex: number) {
+    this.workingStaffLine = staffIndex;
+  }
 }
