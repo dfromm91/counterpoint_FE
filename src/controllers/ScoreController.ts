@@ -214,5 +214,23 @@ export class ScoreController {
     this.scoreLayouter.setCursor(staffIndex, noteIndex);
     this.scoreLayouter.melodyLayouter.setCursor(noteIndex);
     this.score.setCursor(staffIndex);
+    const notesInStaffLine =
+      this.scoreLayouter.staffLocationData[staffIndex].cantusFirmus.length;
+    if (noteIndex > 0 && noteIndex <= notesInStaffLine) {
+      for (let i = 0; i < noteIndex; i++) {
+        if (!this.score.staffLines[staffIndex].melody[i]) {
+          this.score.addNote(new models.Note("ERR", -1));
+          this.scoreLayouter.staffLocationData[staffIndex].counterMelody.push({
+            x: -1,
+            y: -1,
+          });
+          console.log("adding error note");
+          this.score.showNotes();
+        } else {
+          console.log("valid note:");
+          console.log(this.score.staffLines[staffIndex].melody[i]);
+        }
+      }
+    }
   }
 }
