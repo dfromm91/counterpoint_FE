@@ -55,7 +55,7 @@ scoreController.addNotes(cantusFirmus, "bass");
 // scoreController.addLine(notAnimated);
 // scoreController.addNotes(counterMelody, "treble");
 // scoreController.clearStaff(1);
-scoreController.setCursor(1, 1);
+scoreController.setCursor(0, 0);
 scoreController.addNote(counterMelody[4], "treble", "select");
 // scoreController.addNote(counterMelody[1],"treble");
 

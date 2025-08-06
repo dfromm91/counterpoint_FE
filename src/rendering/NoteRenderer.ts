@@ -112,6 +112,10 @@ export class NoteRenderer {
       this.renderer.drawLine(line);
     });
     this.ctx.fillStyle = "black";
+    this.drawBarLine(
+      x + 0.5 * defaultStaffConfig.horizontalNoteSpacing,
+      offsetY
+    );
   }
   drawWholeNote(
     x: number,
@@ -141,5 +145,19 @@ export class NoteRenderer {
   ) {
     this.renderNote(x, y, spacing, clef, offsetY, "gray");
     this.ctx.fillStyle = "black";
+  }
+  drawBarLine(x: number, y: number) {
+    this.renderer.drawLine(
+      new Line(
+        x,
+        y,
+        x,
+        y +
+          9 * defaultStaffConfig.spacing +
+          defaultStaffConfig.grandStaffSpacing,
+        defaultStaffConfig.lineThickness,
+        "black"
+      )
+    );
   }
 }

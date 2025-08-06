@@ -82,6 +82,7 @@ export class ScoreController {
           this.scoreLayouter.offsetY
         );
       }
+
       this.staffRenderer.drawStaff(this.scoreLayouter.offsetY, false);
     }
   }
