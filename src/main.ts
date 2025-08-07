@@ -1,33 +1,20 @@
-// main.ts
 import { setupApp } from "./utils/setupApp.js";
-import { registerCanvasEvents } from "./utils/eventHandlers.js";
-import { Note } from "./models/index.js";
+import { GameController } from "./controllers/GameController.js";
+import { Player } from "./models/Player.js";
 
 const canvas = document.getElementById("canvas") as HTMLCanvasElement;
+const intervalDisplay = document.getElementById(
+  "interval-display"
+) as HTMLDivElement;
 const scoreController = setupApp(canvas);
 
-const cantusFirmus: Note[] = [
-  new Note("b", 2),
-  new Note("e", 3),
-  new Note("e", 3),
-  new Note("f", 3),
-  new Note("g", 3),
-  new Note("e", 3),
-  new Note("f", 3),
-  new Note("g", 3),
-];
+const player1 = new Player("player1", "Player 1", true);
+const player2 = new Player("player2", "Player 2", true); // later could be remote
 
-const counterMelody: Note[] = [
-  new Note("c", 4),
-  new Note("d", 4),
-  new Note("e", 4),
-  new Note("f", 4),
-  new Note("g", 4),
-];
-
-scoreController.initialize(false);
-scoreController.addNotes(cantusFirmus, "bass");
-scoreController.setCursor(0, 0);
-scoreController.addNote(counterMelody[4], "treble", "select");
-
-registerCanvasEvents(canvas, scoreController);
+const gameController = new GameController(
+  canvas,
+  scoreController,
+  [player1, player2],
+  intervalDisplay
+);
+gameController.initializeGame();

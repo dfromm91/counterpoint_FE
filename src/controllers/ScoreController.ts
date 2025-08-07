@@ -12,6 +12,8 @@ export class ScoreController {
     public buttonLayouter: layouter.ButtonLayouter
   ) {}
 
+  private lastNote: models.Note = new models.Note("z", 12);
+  private cantusFirmus: models.Note[] = [];
   addNote(note: models.Note, clef: string = "treble", type: string = "draw") {
     const { x, y } = this.scoreLayouter.add(note, clef);
     const nextButtonX = x + layouter.defaultStaffConfig.horizontalNoteSpacing;
@@ -64,6 +66,8 @@ export class ScoreController {
           layouter.defaultStaffConfig.spacing
         );
         this.buttonLayouter.updateButtonCenter({ x: nextButtonX, y: buttonY });
+      } else {
+        this.cantusFirmus.push(note);
       }
       if (type == "draw") {
         this.noteRenderer.drawWholeNote(
@@ -210,6 +214,7 @@ export class ScoreController {
       this.scoreLayouter.offsetY
     );
     this.addNote(newNote, "treble", "select");
+    this.setLastNote(newNote);
   }
   setCursor(staffIndex: number, noteIndex: number) {
     this.scoreLayouter.setCursor(staffIndex, noteIndex);
@@ -233,5 +238,14 @@ export class ScoreController {
         }
       }
     }
+  }
+  setLastNote(note: models.Note): void {
+    this.lastNote = note;
+  }
+  getLastNote(): models.Note {
+    return this.lastNote;
+  }
+  getCantusFirmus(): models.Note[] {
+    return this.cantusFirmus;
   }
 }

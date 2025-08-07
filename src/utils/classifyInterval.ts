@@ -13,8 +13,8 @@ export enum Interval {
   MinorSeventh = "Minor Seventh",
   MajorSeventh = "Major Seventh",
 }
-const pitchOrder = ["c", "d", "e", "f", "g", "a", "b"] as const;
-const semitoneFromC: Record<string, number> = {
+export const pitchOrder = ["c", "d", "e", "f", "g", "a", "b"] as const;
+export const semitoneFromC: Record<string, number> = {
   c: 0,
   d: 2,
   e: 4,
@@ -24,7 +24,7 @@ const semitoneFromC: Record<string, number> = {
   b: 11,
 };
 
-const intervalQualityMap: Record<number, Record<number, Interval>> = {
+export const intervalQualityMap: Record<number, Record<number, Interval>> = {
   0: { 0: Interval.Unison },
   1: { 1: Interval.MinorSecond, 2: Interval.MajorSecond },
   2: { 3: Interval.MinorThird, 4: Interval.MajorThird },
@@ -35,8 +35,8 @@ const intervalQualityMap: Record<number, Record<number, Interval>> = {
 };
 
 export function getDiatonicInterval(from: Note, to: Note): Interval {
-  const fromPitch = from.pitchClass.toUpperCase();
-  const toPitch = to.pitchClass.toUpperCase();
+  const fromPitch = from.pitchClass;
+  const toPitch = to.pitchClass;
 
   const fromIndex = pitchOrder.indexOf(
     fromPitch as (typeof pitchOrder)[number]
