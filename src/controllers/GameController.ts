@@ -8,10 +8,12 @@ import { defaultStaffConfig } from "../layout/index.js";
 import { Player } from "../models/Player.js";
 import { Note } from "../models/Note.js";
 import * as intervals from "../utils/classifyInterval.js";
+import { evaluateRules } from "../utils/evaluateRules.js";
 
 export class GameController {
   private currentPlayerIndex: number = 0;
   private playedNotes: Note[] = [];
+  private cantusFirmus: Note[] = [];
   constructor(
     private canvas: HTMLCanvasElement,
     private scoreController: ScoreController,
@@ -70,9 +72,14 @@ export class GameController {
   onConfirm(currentPlayer: Player) {
     currentPlayer.addNote(this.scoreController.getLastNote());
     this.playedNotes.push(this.scoreController.getLastNote());
+    const playedNotesLength = this.playedNotes.length;
+    this.cantusFirmus.push(
+      this.scoreController.getCantusFirmus()[playedNotesLength - 1]
+    );
     console.log("counter melody notes played so far:");
     console.log(this.playedNotes);
     this.updateInterval();
+    console.log(evaluateRules(this.playedNotes, this.cantusFirmus));
     this.endTurn();
   }
 
