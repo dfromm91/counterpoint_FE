@@ -60,7 +60,7 @@ export function evaluateRules(melody: Note[], cantusFirmus: Note[]): string[] {
     cantusFirmus[cantusFirmus.length - 1],
     cantusFirmus[cantusFirmus.length - 2]
   );
-  let melodyDirection: noteDirection = determineDirection(
+  const melodyDirection: noteDirection = determineDirection(
     melody[melody.length - 1],
     melody[melody.length - 2]
   );
@@ -72,6 +72,10 @@ export function evaluateRules(melody: Note[], cantusFirmus: Note[]): string[] {
   const isParallel =
     determineMotionType(melodyDirection, cantusDirection) ==
     motionType.parallel;
+
+  if (melody[melody.length - 1] == melody[melody.length - 2]) {
+    violations.push("repeated note");
+  }
   if (illegalIntervals.includes(interval)) {
     violations.push("Illegal interval: " + interval);
   }
@@ -82,6 +86,31 @@ export function evaluateRules(melody: Note[], cantusFirmus: Note[]): string[] {
 
   if (illegalLeaps.includes(melodyInterval)) {
     violations.push("illegal leap: " + interval);
+  }
+  if (melody.length >= 3) {
+    const interval1 = getDiatonicInterval(
+      melody[melody.length - 3],
+      melody[melody.length - 2]
+    );
+    const interval2 = getDiatonicInterval(
+      melody[melody.length - 2],
+      melody[melody.length - 1]
+    );
+    const direction1 = determineDirection(
+      melody[melody.length - 3],
+      melody[melody.length - 2]
+    );
+    const direction2 = determineDirection(
+      melody[melody.length - 2],
+      melody[melody.length - 1]
+    );
+    console.log("interval 1: " + interval1);
+    console.log("interval 2: " + interval2);
+    console.log("direction 1: " + direction1);
+    console.log("direction 2: " + direction2);
+    if (isLeap(interval1) && isLeap(interval2) && direction1 == direction2) {
+      violations.push("two leaps in the same direction");
+    }
   }
   return violations;
 }
@@ -115,4 +144,8 @@ export function determineMotionType(
     return motionType.contrary;
   }
   return motionType.oblique;
+}
+export function isLeap(interval: Interval): boolean {
+  const steps: Interval[] = [Interval.MajorSecond, Interval.MinorSecond];
+  return !steps.includes(interval);
 }
