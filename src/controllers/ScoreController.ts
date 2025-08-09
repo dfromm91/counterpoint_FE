@@ -45,15 +45,14 @@ export class ScoreController {
 
         return;
       } else {
-        console.log("moving cursor to existing line");
         this.setCursor(this.scoreLayouter.currentStaffLine + 1, 0);
         this.addNote(note, clef);
-        this.score.showNotes();
+
         return;
       }
     } else {
       this.score.addNote(note, clef);
-      this.score.showNotes();
+
       if (clef == "treble") {
         const buttonY =
           this.scoreLayouter.offsetY + layouter.defaultStaffConfig.spacing;
@@ -198,9 +197,7 @@ export class ScoreController {
     const lastNoteRegister =
       this.score.staffLines[lastStaffIndex].melody[lastNoteIndex].octave;
     const newNote = new models.Note(lastNoteLetter, lastNoteRegister);
-    console.log(
-      "staff index: " + lastStaffIndex + " note index: " + lastNoteIndex
-    );
+
     const { x, y } = this.scoreLayouter.getNoteLocation(
       lastStaffIndex,
       lastNoteIndex,
@@ -230,11 +227,7 @@ export class ScoreController {
             x: -1,
             y: -1,
           });
-          console.log("adding error note");
-          this.score.showNotes();
         } else {
-          console.log("valid note:");
-          console.log(this.score.staffLines[staffIndex].melody[i]);
         }
       }
     }

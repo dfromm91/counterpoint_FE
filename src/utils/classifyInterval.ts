@@ -47,15 +47,22 @@ export function getDiatonicInterval(from: Note, to: Note): Interval {
     throw new Error(`Invalid pitch class: ${fromPitch} or ${toPitch}`);
   }
 
-  const stepDistance =
-    (toIndex - fromIndex + (to.octave - from.octave) * 7 + 7) % 7;
-
   const fromSemis = semitoneFromC[fromPitch] + from.octave * 12;
   const toSemis = semitoneFromC[toPitch] + to.octave * 12;
-  const semitoneDistance = (toSemis - fromSemis + 120) % 12;
+
+  if (toSemis < fromSemis) {
+    return getDiatonicInterval(to, from);
+  }
+
+  if (toSemis === fromSemis) {
+    return Interval.Unison;
+  }
+
+  const stepDistance =
+    (toIndex - fromIndex + (to.octave - from.octave) * 7 + 7) % 7;
+  const semitoneDistance = (toSemis - fromSemis) % 12;
 
   const intervalName = intervalQualityMap[stepDistance]?.[semitoneDistance];
-
   if (!intervalName) {
     throw new Error(
       `No interval found for ${stepDistance} diatonic steps and ${semitoneDistance} semitones`

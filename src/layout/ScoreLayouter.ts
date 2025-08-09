@@ -22,8 +22,6 @@ export class ScoreLayouter {
     const { x, y } = this.melodyLayouter.add(note, this.offsetY, clef);
 
     if (clef == "treble") {
-      console.log("x: " + x + ", y: " + y);
-      console.log(this.staffLocationData);
       this.currentNoteIndex += 1;
       this.staffLocationData[this.currentStaffLine].counterMelody.push({
         x,
@@ -55,7 +53,6 @@ export class ScoreLayouter {
     return { x: -1, y: -1 };
   }
   setCursor(staffIndex: number, noteIndex: number) {
-    console.log("got " + staffIndex + " for a staff index in scorelayouter");
     this.currentNoteIndex = noteIndex;
     this.currentStaffLine = staffIndex;
     const lineDistance =
