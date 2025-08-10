@@ -4,21 +4,35 @@ import {
   registerCanvasEvents,
   unregisterCanvasEvents,
 } from "../utils/eventHandlers.js";
-import { defaultStaffConfig } from "../layout/index.js";
 import { Player } from "../models/Player.js";
 import { Note } from "../models/Note.js";
 import * as intervals from "../utils/classifyInterval.js";
 import { evaluateRules } from "../utils/evaluateRules.js";
 
+export type ISocket = {
+  on: (event: string, cb: (...args: any[]) => void) => void;
+  emit: (event: string, ...args: any[]) => void;
+  id?: string;
+};
+
+type OpponentNotePayload = {
+  pitchClass: string; // e.g. "c" | "d" | ...
+  octave: number; // e.g. 4
+  // (optionally include indices/roomId if you need them)
+};
+
 export class GameController {
-  private currentPlayerIndex: number = 0;
+  private currentPlayerIndex = 0;
   private playedNotes: Note[] = [];
   private cantusFirmus: Note[] = [];
+
   constructor(
     private canvas: HTMLCanvasElement,
     private scoreController: ScoreController,
     private players: [Player, Player],
-    private intervalDisplay: HTMLDivElement
+    private intervalDisplay: HTMLDivElement,
+    private socket: ISocket,
+    private roomId: string
   ) {}
 
   initializeGame(): void {
@@ -46,7 +60,17 @@ export class GameController {
     this.scoreController.setCursor(0, 0);
     this.scoreController.addNote(counterMelody[4], "treble", "select");
 
+    this.registerSocketHandlers(); // <-- add this
     this.handleTurn();
+  }
+
+  private registerSocketHandlers() {
+    // Listen for opponent note placements from the server
+    this.socket.on("place_opponent_note", (payload: OpponentNotePayload) => {
+      // Reconstruct Note instance from plain object
+      const note = new Note(payload.pitchClass, payload.octave);
+      this.displayOpponentMove(note);
+    });
   }
 
   handleTurn(): void {
@@ -70,25 +94,38 @@ export class GameController {
   }
 
   onConfirm(currentPlayer: Player) {
-    currentPlayer.addNote(this.scoreController.getLastNote());
-    this.playedNotes.push(this.scoreController.getLastNote());
-    const playedNotesLength = this.playedNotes.length;
-    this.cantusFirmus.push(
-      this.scoreController.getCantusFirmus()[playedNotesLength - 1]
-    );
-    console.log("counter melody notes played so far:");
-    console.log(this.playedNotes);
+    const last = this.scoreController.getLastNote();
+    currentPlayer.addNote(last);
+    this.playedNotes.push(last);
+
+    const i = this.playedNotes.length - 1;
+    this.cantusFirmus.push(this.scoreController.getCantusFirmus()[i]);
+
     this.updateInterval();
-    console.log(evaluateRules(this.playedNotes, this.cantusFirmus));
+    console.log("rules:", evaluateRules(this.playedNotes, this.cantusFirmus));
+
+    // If you also want to broadcast your move so the opponent receives it:
+    // (You can emit from here OR from your eventHandlers at the check click)
+    this.socket.emit("place_note", {
+      roomId: this.roomId,
+      pitchClass: last.pitchClass,
+      octave: last.octave,
+    });
+
     this.endTurn();
   }
 
   updateInterval() {
-    const playedNotesLength = this.playedNotes.length;
+    const i = this.playedNotes.length - 1;
     const interval = intervals.getDiatonicInterval(
-      this.scoreController.getCantusFirmus()[playedNotesLength - 1],
-      this.playedNotes[playedNotesLength - 1]
+      this.scoreController.getCantusFirmus()[i],
+      this.playedNotes[i]
     );
     this.intervalDisplay.innerText = interval;
+  }
+
+  displayOpponentMove(note: Note) {
+    // Draw without changing selection; use your existing “draw” mode
+    this.scoreController.addNote(note, "treble", "draw");
   }
 }

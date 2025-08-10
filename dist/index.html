@@ -3,6 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <base href="/" />
     <title>Document</title>
     <style>
       #interval-display {
@@ -19,6 +20,7 @@
   <body>
     <div id="interval-display">Interval: (none selected)</div>
     <canvas id="canvas" width="1200" height="1200"></canvas>
+    <script src="/socket.io/socket.io.js"></script>
 
     <script type="module" src="./main.js"></script>
   </body>
