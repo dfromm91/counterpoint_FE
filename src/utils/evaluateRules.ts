@@ -1,21 +1,7 @@
 import { Note } from "../models";
 import { getDiatonicInterval, Interval } from "./classifyInterval.js";
 
-const perfectConsonances = new Set([
-  Interval.Unison,
-  Interval.PerfectFifth,
-  // We'll treat Unison as Octave when octave is different
-]);
-
-const consonantIntervals = new Set([
-  Interval.Unison,
-  Interval.MinorThird,
-  Interval.MajorThird,
-  Interval.PerfectFifth,
-  Interval.MinorSixth,
-  Interval.MajorSixth,
-  // Interval.Octave, // not included in enum, see below
-]);
+// --- Helpers / enums
 enum noteDirection {
   ascending = "ascending",
   descending = "descending",
@@ -27,93 +13,120 @@ enum motionType {
   contrary = "contrary",
 }
 
+// Treat Unison as Octave when pitch class matches but octave differs
+function isOctave(a: Note, b: Note): boolean {
+  return a.pitchClass === b.pitchClass && a.octave !== b.octave;
+}
+
+function notesEqual(a: Note, b: Note): boolean {
+  return a.pitchClass === b.pitchClass && a.octave === b.octave;
+}
+
+// --- Rule sets (use Set to avoid Array.prototype.includes)
+const ILLEGAL_INTERVALS = new Set<Interval>([
+  Interval.PerfectFourth,
+  Interval.MajorSecond,
+  Interval.MinorSecond,
+  Interval.MajorSeventh,
+  Interval.Tritone,
+]);
+
+const PERFECT_CONSONANCES = new Set<Interval>([
+  Interval.PerfectFifth,
+  Interval.Unison, // plus octave via isOctave()
+]);
+
+const ILLEGAL_LEAPS = new Set<Interval>([
+  Interval.MinorSeventh,
+  Interval.MajorSeventh,
+]);
+
+// --- Public API
 export function evaluateRules(melody: Note[], cantusFirmus: Note[]): string[] {
   const violations: string[] = [];
-  const illegalIntervals: Interval[] = [
-    Interval.PerfectFourth,
-    Interval.MajorSecond,
-    Interval.MinorSecond,
-    Interval.MajorSeventh,
-    Interval.MajorSeventh,
-    Interval.Tritone,
-  ];
 
-  const perfectConsonances: Interval[] = [
-    Interval.PerfectFifth,
-    Interval.Unison,
-  ];
-  const illegalLeaps = [Interval.MinorSeventh, Interval.MajorSeventh];
-  const interval = getDiatonicInterval(
-    melody[melody.length - 1],
-    cantusFirmus[cantusFirmus.length - 1]
+  // Guard rails
+  if (!melody?.length || !cantusFirmus?.length) return violations;
+
+  const mLen = melody.length;
+  const cLen = cantusFirmus.length;
+
+  const currentHarmonicInterval = getDiatonicInterval(
+    melody[mLen - 1],
+    cantusFirmus[cLen - 1]
   );
-  if (melody.length == 1) {
-    if (!illegalIntervals.includes(interval)) {
+
+  // First placement: allow if not an illegal harmonic interval
+  if (mLen === 1) {
+    if (!ILLEGAL_INTERVALS.has(currentHarmonicInterval)) {
       return [];
     } else {
-      return ["illegal interval " + interval];
+      return ["illegal interval " + currentHarmonicInterval];
     }
   }
-  const isPerfectConsonance = perfectConsonances.includes(interval);
 
+  const isPerfectConsonance =
+    PERFECT_CONSONANCES.has(currentHarmonicInterval) ||
+    isOctave(melody[mLen - 1], cantusFirmus[cLen - 1]);
+
+  // Directions & melodic interval (need at least 2 melody notes and 2 CF notes)
   const cantusDirection: noteDirection = determineDirection(
-    cantusFirmus[cantusFirmus.length - 1],
-    cantusFirmus[cantusFirmus.length - 2]
+    cantusFirmus[cLen - 1],
+    cantusFirmus[cLen - 2]
   );
   const melodyDirection: noteDirection = determineDirection(
-    melody[melody.length - 1],
-    melody[melody.length - 2]
+    melody[mLen - 1],
+    melody[mLen - 2]
   );
   const melodyInterval: Interval = getDiatonicInterval(
-    melody[melody.length - 1],
-    melody[melody.length - 2]
+    melody[mLen - 1],
+    melody[mLen - 2]
   );
 
   const isParallel =
-    determineMotionType(melodyDirection, cantusDirection) ==
+    determineMotionType(melodyDirection, cantusDirection) ===
     motionType.parallel;
 
-  if (melody[melody.length - 1] == melody[melody.length - 2]) {
+  // Repeated note (by value, not reference)
+  if (notesEqual(melody[mLen - 1], melody[mLen - 2])) {
     violations.push("repeated note");
   }
-  if (illegalIntervals.includes(interval)) {
-    violations.push("Illegal interval: " + interval);
+
+  // Illegal harmonic interval
+  if (ILLEGAL_INTERVALS.has(currentHarmonicInterval)) {
+    violations.push("Illegal interval: " + currentHarmonicInterval);
   }
 
+  // Parallel perfect consonance (kept same logic as your original)
   if (isPerfectConsonance && isParallel) {
-    violations.push("parallel perfect consonance: " + interval);
+    violations.push("parallel perfect consonance: " + currentHarmonicInterval);
   }
 
-  if (illegalLeaps.includes(melodyInterval)) {
-    violations.push("illegal leap: " + interval);
+  // Illegal melodic leap
+  if (ILLEGAL_LEAPS.has(melodyInterval)) {
+    violations.push("illegal leap: " + melodyInterval);
   }
-  if (melody.length >= 3) {
-    const interval1 = getDiatonicInterval(
-      melody[melody.length - 3],
-      melody[melody.length - 2]
-    );
-    const interval2 = getDiatonicInterval(
-      melody[melody.length - 2],
-      melody[melody.length - 1]
-    );
-    const direction1 = determineDirection(
-      melody[melody.length - 3],
-      melody[melody.length - 2]
-    );
-    const direction2 = determineDirection(
-      melody[melody.length - 2],
-      melody[melody.length - 1]
-    );
+
+  // Two consecutive melodic leaps in the same direction
+  if (mLen >= 3) {
+    const interval1 = getDiatonicInterval(melody[mLen - 3], melody[mLen - 2]);
+    const interval2 = getDiatonicInterval(melody[mLen - 2], melody[mLen - 1]);
+    const direction1 = determineDirection(melody[mLen - 3], melody[mLen - 2]);
+    const direction2 = determineDirection(melody[mLen - 2], melody[mLen - 1]);
+
     console.log("interval 1: " + interval1);
     console.log("interval 2: " + interval2);
     console.log("direction 1: " + direction1);
     console.log("direction 2: " + direction2);
-    if (isLeap(interval1) && isLeap(interval2) && direction1 == direction2) {
+
+    if (isLeap(interval1) && isLeap(interval2) && direction1 === direction2) {
       violations.push("two leaps in the same direction");
     }
   }
+
   return violations;
 }
+
 export function determineDirection(note1: Note, note2: Note): noteDirection {
   const pitches = ["c", "d", "e", "f", "g", "a", "b"];
   if (note2.octave > note1.octave) {
@@ -122,7 +135,7 @@ export function determineDirection(note1: Note, note2: Note): noteDirection {
   if (note2.octave < note1.octave) {
     return noteDirection.descending;
   }
-  if (note1.octave == note2.octave && note1.pitchClass == note2.pitchClass) {
+  if (note1.octave === note2.octave && note1.pitchClass === note2.pitchClass) {
     return noteDirection.plateau;
   }
   if (pitches.indexOf(note2.pitchClass) > pitches.indexOf(note1.pitchClass)) {
@@ -130,22 +143,27 @@ export function determineDirection(note1: Note, note2: Note): noteDirection {
   }
   return noteDirection.descending;
 }
+
 export function determineMotionType(
   melodyDirection: noteDirection,
   cantusDirection: noteDirection
 ): motionType {
-  if (melodyDirection == cantusDirection) {
+  if (melodyDirection === cantusDirection) {
     return motionType.parallel;
   }
   if (
-    melodyDirection != noteDirection.plateau &&
-    cantusDirection != noteDirection.plateau
+    melodyDirection !== noteDirection.plateau &&
+    cantusDirection !== noteDirection.plateau
   ) {
     return motionType.contrary;
   }
   return motionType.oblique;
 }
+
 export function isLeap(interval: Interval): boolean {
-  const steps: Interval[] = [Interval.MajorSecond, Interval.MinorSecond];
-  return !steps.includes(interval);
+  const stepIntervals = new Set<Interval>([
+    Interval.MajorSecond,
+    Interval.MinorSecond,
+  ]);
+  return !stepIntervals.has(interval);
 }
