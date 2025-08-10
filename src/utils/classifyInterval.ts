@@ -28,8 +28,8 @@ export const intervalQualityMap: Record<number, Record<number, Interval>> = {
   0: { 0: Interval.Unison },
   1: { 1: Interval.MinorSecond, 2: Interval.MajorSecond },
   2: { 3: Interval.MinorThird, 4: Interval.MajorThird },
-  3: { 5: Interval.PerfectFourth, 6: Interval.Tritone },
-  4: { 7: Interval.PerfectFifth },
+  3: { 5: Interval.PerfectFourth, 6: Interval.Tritone }, // A4
+  4: { 6: Interval.Tritone, 7: Interval.PerfectFifth }, // d5 added here
   5: { 8: Interval.MinorSixth, 9: Interval.MajorSixth },
   6: { 10: Interval.MinorSeventh, 11: Interval.MajorSeventh },
 };
