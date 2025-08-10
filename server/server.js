@@ -29,7 +29,7 @@ app.get("/room/:roomId", (_req, res) => {
 const httpServer = createServer(app);
 const io = new Server(httpServer); // same-origin sockets, no CORS needed
 
-// --- Minimal sockets: join a room and be ready to receive events ---
+// --- Socket event handlers: join a room and handle game events ---
 io.on("connection", (socket) => {
   console.log("connected:", socket.id);
 
@@ -41,18 +41,19 @@ io.on("connection", (socket) => {
       .emit("player_joined", { id: socket.id, name: name || "Player" });
   });
 
-  // (You can add more events later: place_note, confirm_move, etc.)
-  socket.on("disconnect", () => {
-    console.log("disconnected:", socket.id);
-  });
-  socket.on("confirm_move", ({ roomId }) => {
-    socket.to(roomId).emit("opponent_confirmed_move");
+  // when a client tweaks note locally (arrow up/down)
+  socket.on("update_note", ({ roomId, increment }) => {
+    // broadcast to *other* clients in that room
+    socket.to(roomId).emit("opponent_update_note", { increment });
   });
 
-  // inside io.on('connection', socket => { ... })
-  socket.on("place_note", ({ roomId, pitchClass, octave }) => {
-    // relay to everyone else in that room
-    socket.to(roomId).emit("place_opponent_note", { pitchClass, octave });
+  // when a client confirms a note
+  socket.on("confirm_note", ({ roomId }) => {
+    socket.to(roomId).emit("opponent_confirm_note");
+  });
+
+  socket.on("disconnect", () => {
+    console.log("disconnected:", socket.id);
   });
 });
 

@@ -71,15 +71,28 @@ export class GameController {
       const note = new Note(payload.pitchClass, payload.octave);
       this.displayOpponentMove(note);
     });
+    this.socket.on("opponent_confirm_note", () => {
+      // If you want to auto-confirm/draw the note on opponent confirm:
+      this.scoreController.confirmNote();
+    });
+    this.socket.on("opponent_update_note", ({ increment }) => {
+      this.scoreController.updateLastNote(increment);
+    });
   }
 
   handleTurn(): void {
     const currentPlayer = this.players[this.currentPlayerIndex];
 
     if (currentPlayer.isLocal) {
-      registerCanvasEvents(this.canvas, this.scoreController, () => {
-        this.onConfirm(currentPlayer);
-      });
+      registerCanvasEvents(
+        this.canvas,
+        this.scoreController,
+        () => {
+          this.onConfirm(currentPlayer);
+        },
+        this.socket,
+        this.roomId
+      );
     } else {
       unregisterCanvasEvents(this.canvas);
     }
@@ -104,13 +117,7 @@ export class GameController {
     this.updateInterval();
     console.log("rules:", evaluateRules(this.playedNotes, this.cantusFirmus));
 
-    // If you also want to broadcast your move so the opponent receives it:
-    // (You can emit from here OR from your eventHandlers at the check click)
-    this.socket.emit("place_note", {
-      roomId: this.roomId,
-      pitchClass: last.pitchClass,
-      octave: last.octave,
-    });
+    // Broadcast the confirmed note to other players
 
     this.endTurn();
   }
