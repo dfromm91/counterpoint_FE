@@ -18,9 +18,7 @@ export class Score {
       this.staffLines[this.workingStaffLine].cantusFirmus.push(note);
     }
   }
-  showNotes() {
-    console.log(this.staffLines);
-  }
+  showNotes() {}
   setCursor(staffIndex: number) {
     this.workingStaffLine = staffIndex;
   }

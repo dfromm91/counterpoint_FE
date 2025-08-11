@@ -29,7 +29,7 @@ export class GameController {
   constructor(
     private canvas: HTMLCanvasElement,
     private scoreController: ScoreController,
-    private players: [Player, Player],
+
     private intervalDisplay: HTMLDivElement,
     private socket: ISocket,
     private roomId: string
@@ -60,77 +60,61 @@ export class GameController {
     this.scoreController.setCursor(0, 0);
     this.scoreController.addNote(counterMelody[4], "treble", "select");
 
-    this.registerSocketHandlers(); // <-- add this
+    this.registerSocketHandlers();
     this.handleTurn();
   }
 
   private registerSocketHandlers() {
-    // Listen for opponent note placements from the server
-    this.socket.on("place_opponent_note", (payload: OpponentNotePayload) => {
-      // Reconstruct Note instance from plain object
-      const note = new Note(payload.pitchClass, payload.octave);
-      this.displayOpponentMove(note);
-    });
+    // this.socket.on("place_opponent_note", (payload: OpponentNotePayload) => {
+    //   const note = new Note(payload.pitchClass, payload.octave);
+    //   this.displayOpponentMove(note);
+    // });
     this.socket.on("opponent_confirm_note", () => {
-      // If you want to auto-confirm/draw the note on opponent confirm:
       this.scoreController.confirmNote();
+      this.onConfirm(false);
     });
     this.socket.on("opponent_update_note", ({ increment }) => {
       this.scoreController.updateLastNote(increment);
     });
     this.socket.on("set_turn_order", ({ goingFirst }) => {
       this.isTurn = goingFirst;
-      console.log("going first: " + goingFirst);
       this.handleTurn();
     });
     this.socket.on("change_turns", () => {
+      console.log("isturn was: " + this.isTurn);
       this.isTurn = !this.isTurn;
+      console.log("isturn is now: " + this.isTurn);
       this.handleTurn();
-      console.log("my turn = " + this.isTurn);
     });
   }
 
   handleTurn(): void {
-    const currentPlayer = this.players[this.currentPlayerIndex];
-
-    if (currentPlayer.isLocal) {
-      registerCanvasEvents(
-        this.canvas,
-        this.scoreController,
-        () => {
-          this.onConfirm(currentPlayer);
-        },
-        this.socket,
-        this.roomId,
-        this.isTurn
-      );
-    } else {
-      unregisterCanvasEvents(this.canvas);
-    }
-
-    console.log(`It's ${currentPlayer.name}'s turn`);
+    registerCanvasEvents(
+      this.canvas,
+      this.scoreController,
+      () => {
+        this.onConfirm(true);
+      },
+      this.socket,
+      this.roomId,
+      this.isTurn
+    );
   }
 
   endTurn(): void {
-    this.currentPlayerIndex =
-      (this.currentPlayerIndex + 1) % this.players.length;
     this.socket.emit("end_turn", { roomId: this.roomId });
+    console.log(this.playedNotes);
   }
 
-  onConfirm(currentPlayer: Player) {
+  onConfirm(shouldEndTurn: boolean) {
     const last = this.scoreController.getLastNote();
-    currentPlayer.addNote(last);
     this.playedNotes.push(last);
-
     const i = this.playedNotes.length - 1;
     this.cantusFirmus.push(this.scoreController.getCantusFirmus()[i]);
-
     this.updateInterval();
-    console.log("rules:", evaluateRules(this.playedNotes, this.cantusFirmus));
-
-    // Broadcast the confirmed note to other players
-
-    this.endTurn();
+    if (shouldEndTurn) {
+      this.endTurn();
+    }
   }
 
   updateInterval() {
@@ -143,7 +127,6 @@ export class GameController {
   }
 
   displayOpponentMove(note: Note) {
-    // Draw without changing selection; use your existing “draw” mode
     this.scoreController.addNote(note, "treble", "draw");
   }
 }

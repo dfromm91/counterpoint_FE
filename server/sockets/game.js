@@ -10,7 +10,7 @@ export function registerGameSocketHandlers(io, socket) {
       gameStates[roomId] = new GameState();
     }
     socket.join(roomId);
-    console.log(`${socket.id} joined ${roomId} as ${name || "Player"}`);
+
     socket
       .to(roomId)
       .emit("player_joined", { id: socket.id, name: name || "Player" });

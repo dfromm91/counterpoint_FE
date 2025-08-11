@@ -11,6 +11,4 @@ const httpServer = createServer(app);
 attachSockets(httpServer);
 
 // Start server
-httpServer.listen(PORT, () => {
-  console.log(`Server listening on :${PORT}`);
-});
+httpServer.listen(PORT, () => {});

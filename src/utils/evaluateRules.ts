@@ -114,11 +114,6 @@ export function evaluateRules(melody: Note[], cantusFirmus: Note[]): string[] {
     const direction1 = determineDirection(melody[mLen - 3], melody[mLen - 2]);
     const direction2 = determineDirection(melody[mLen - 2], melody[mLen - 1]);
 
-    console.log("interval 1: " + interval1);
-    console.log("interval 2: " + interval2);
-    console.log("direction 1: " + direction1);
-    console.log("direction 2: " + direction2);
-
     if (isLeap(interval1) && isLeap(interval2) && direction1 === direction2) {
       violations.push("two leaps in the same direction");
     }

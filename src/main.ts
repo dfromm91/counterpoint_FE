@@ -17,7 +17,6 @@ socket.emit("join_room", { roomId, name: "Player" });
 
 // (Optional) just to prove messages flow both ways later:
 socket.on("player_joined", (p: any) => {
-  console.log("player_joined:", p);
   goingFirst = false;
 });
 
@@ -36,7 +35,6 @@ const player2 = new Player("player2", "Player 2", true); // later could be remot
 const gameController = new GameController(
   canvas,
   scoreController,
-  [player1, player2],
   intervalDisplay,
   socket,
   roomId
