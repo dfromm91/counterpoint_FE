@@ -6,7 +6,8 @@ const canvas = document.getElementById("canvas") as HTMLCanvasElement;
 // Grab roomId from /room/:roomId path
 const parts = location.pathname.split("/"); // ["", "room", ":roomId"]
 const roomId = parts[2] || "lobby";
-
+let goingFirst = true;
+let players: Player[] = [];
 // Use the global io from /socket.io/socket.io.js.
 // If TypeScript complains, you can cast it.
 const socket = (window as any).io();
@@ -17,6 +18,7 @@ socket.emit("join_room", { roomId, name: "Player" });
 // (Optional) just to prove messages flow both ways later:
 socket.on("player_joined", (p: any) => {
   console.log("player_joined:", p);
+  goingFirst = false;
 });
 
 // You now have `socket` ready to use anywhere:

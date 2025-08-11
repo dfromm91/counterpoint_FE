@@ -10,12 +10,15 @@ export function registerCanvasEvents(
   controller: ScoreController,
   onConfirm: () => void,
   socket: any,
-  roomId: string
+  roomId: string,
+  isTurn: boolean
 ): void {
-  if (isRegistered) return; // guard against duplicates
+  if (!isTurn) {
+    unregisterCanvasEvents(canvas);
+    return;
+  }
 
   // remove any old listener just in case
-  unregisterCanvasEvents(canvas);
 
   currentListener = (event: MouseEvent) => {
     const rect = canvas.getBoundingClientRect();

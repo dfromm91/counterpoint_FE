@@ -25,7 +25,7 @@ export class GameController {
   private currentPlayerIndex = 0;
   private playedNotes: Note[] = [];
   private cantusFirmus: Note[] = [];
-
+  private isTurn: boolean = false;
   constructor(
     private canvas: HTMLCanvasElement,
     private scoreController: ScoreController,
@@ -78,6 +78,16 @@ export class GameController {
     this.socket.on("opponent_update_note", ({ increment }) => {
       this.scoreController.updateLastNote(increment);
     });
+    this.socket.on("set_turn_order", ({ goingFirst }) => {
+      this.isTurn = goingFirst;
+      console.log("going first: " + goingFirst);
+      this.handleTurn();
+    });
+    this.socket.on("change_turns", () => {
+      this.isTurn = !this.isTurn;
+      this.handleTurn();
+      console.log("my turn = " + this.isTurn);
+    });
   }
 
   handleTurn(): void {
@@ -91,7 +101,8 @@ export class GameController {
           this.onConfirm(currentPlayer);
         },
         this.socket,
-        this.roomId
+        this.roomId,
+        this.isTurn
       );
     } else {
       unregisterCanvasEvents(this.canvas);
@@ -103,7 +114,7 @@ export class GameController {
   endTurn(): void {
     this.currentPlayerIndex =
       (this.currentPlayerIndex + 1) % this.players.length;
-    this.handleTurn();
+    this.socket.emit("end_turn", { roomId: this.roomId });
   }
 
   onConfirm(currentPlayer: Player) {
