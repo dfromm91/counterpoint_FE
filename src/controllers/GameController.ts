@@ -65,10 +65,6 @@ export class GameController {
   }
 
   private registerSocketHandlers() {
-    // this.socket.on("place_opponent_note", (payload: OpponentNotePayload) => {
-    //   const note = new Note(payload.pitchClass, payload.octave);
-    //   this.displayOpponentMove(note);
-    // });
     this.socket.on("opponent_confirm_note", () => {
       this.scoreController.confirmNote();
       this.onConfirm(false);
@@ -124,9 +120,5 @@ export class GameController {
       this.playedNotes[i]
     );
     this.intervalDisplay.innerText = interval;
-  }
-
-  displayOpponentMove(note: Note) {
-    this.scoreController.addNote(note, "treble", "draw");
   }
 }
