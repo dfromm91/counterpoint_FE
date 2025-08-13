@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Counterpoint</title>
+    <style>
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        margin: 0;
+      }
+      .container {
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        padding: 40px;
+        max-width: 600px;
+        width: 100%;
+        text-align: center;
+      }
+      h1 {
+        font-size: 2.5rem;
+        font-weight: 300;
+        margin-bottom: 10px;
+        color: #333;
+      }
+      p {
+        font-size: 1.1rem;
+        color: #666;
+        margin-bottom: 30px;
+      }
+      .btn {
+        display: inline-block;
+        padding: 14px 28px;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 600;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+      .btn-primary {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+      }
+      .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Counterpoint</h1>
+      <p>Compose melodies together in real time. Ready to play?</p>
+      <a href="/play" class="btn btn-primary">Get Started</a>
+    </div>
+  </body>
+</html>

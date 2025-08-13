@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Counterpoint - Join a Room</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1>Counterpoint</h1>
+        <p>Create or join a room to start playing</p>
+      </div>
+
+      <div class="form-container">
+        <!-- Create Room Form -->
+        <div class="form-section">
+          <h2>Create a New Room</h2>
+          <form id="createRoomForm">
+            <div class="form-group">
+              <label for="createRoomName">Room Name</label>
+              <input
+                type="text"
+                id="createRoomName"
+                name="roomName"
+                placeholder="Enter room name"
+                required
+              />
+              <div class="error-message" id="createRoomError"></div>
+            </div>
+            <div class="form-group">
+              <label for="createPlayerName">Your Name</label>
+              <input
+                type="text"
+                id="createPlayerName"
+                name="playerName"
+                placeholder="Enter your name"
+                required
+              />
+            </div>
+            <button type="submit" class="btn btn-primary">Create Room</button>
+          </form>
+        </div>
+
+        <!-- Join Room Form -->
+        <div class="form-section">
+          <h2>Join Existing Room</h2>
+          <form id="joinRoomForm">
+            <div class="form-group">
+              <label for="joinRoomName">Room Name</label>
+              <input
+                type="text"
+                id="joinRoomName"
+                name="roomName"
+                placeholder="Enter room name"
+                required
+              />
+              <div class="error-message" id="joinRoomError"></div>
+            </div>
+            <div class="form-group">
+              <label for="joinPlayerName">Your Name</label>
+              <input
+                type="text"
+                id="joinPlayerName"
+                name="playerName"
+                placeholder="Enter your name"
+                required
+              />
+            </div>
+            <button type="submit" class="btn btn-secondary">Join Room</button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Available Rooms Section -->
+      <div class="rooms-section">
+        <h2>Available Rooms</h2>
+        <button class="refresh-btn" id="refreshBtn" type="button">
+          🔄 Refresh
+        </button>
+        <div id="roomsList">
+          <div class="loading">Loading available rooms...</div>
+        </div>
+      </div>
+    </div>
+
+    <script src="script.js" defer></script>
+  </body>
+</html>

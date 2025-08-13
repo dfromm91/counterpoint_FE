@@ -3,7 +3,8 @@
 // (optionally import a room service here if you track turns/state)
 // import { rooms, nextTurn } from "../services/roomService.js";
 import { GameState } from "../models/gameState.js";
-const gameStates = {};
+export const gameStates = {};
+
 export function registerGameSocketHandlers(io, socket) {
   socket.on("join_room", ({ roomId, name }) => {
     if (!gameStates[roomId]) {
