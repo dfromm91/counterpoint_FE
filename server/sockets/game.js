@@ -19,6 +19,7 @@ export function registerGameSocketHandlers(io, socket) {
       goingFirst: gameStates[roomId].goingFirst,
     });
     gameStates[roomId].goingFirst = false;
+    gameStates[roomId].players.push(name);
   });
   socket.on("end_turn", ({ roomId }) => {
     io.to(roomId).emit("change_turns", {});

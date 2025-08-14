@@ -6,6 +6,15 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("refreshBtn")?.addEventListener("click", loadRooms);
   loadRooms();
   roomsIntervalId = setInterval(loadRooms, 5000);
+  // At the top of your DOMContentLoaded handler:
+  const params = new URLSearchParams(window.location.search);
+  const fullRoom = params.get("full");
+  if (fullRoom) {
+    showError(
+      "joinRoomError",
+      `Room "${fullRoom}" is full. Create a new room or try another.`
+    );
+  }
 });
 
 window.addEventListener("beforeunload", () => {
