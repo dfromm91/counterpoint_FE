@@ -1,5 +1,3 @@
-// server/sockets/game.js
-import { GameState } from "../models/GameState.js";
 export const gameStates = {};
 
 export function registerGameSocketHandlers(io, socket) {
