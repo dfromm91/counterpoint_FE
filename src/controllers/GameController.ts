@@ -23,6 +23,7 @@ type OpponentNotePayload = {
 
 export class GameController {
   private currentPlayerIndex = 0;
+  private allPlayersJoined = false;
   private playedNotes: Note[] = [];
   private cantusFirmus: Note[] = [];
   private isTurn: boolean = false;
@@ -72,8 +73,17 @@ export class GameController {
     this.socket.on("opponent_update_note", ({ increment }) => {
       this.scoreController.updateLastNote(increment);
     });
+    this.socket.on("player_joined", ({ id, name }) => {
+      console.log("all players joined");
+      this.allPlayersJoined = true;
+      this.handleTurn();
+    });
     this.socket.on("set_turn_order", ({ goingFirst }) => {
       this.isTurn = goingFirst;
+      if (!goingFirst) {
+        this.allPlayersJoined = true;
+      }
+
       this.handleTurn();
     });
     this.socket.on("change_turns", () => {
@@ -93,7 +103,8 @@ export class GameController {
       },
       this.socket,
       this.roomId,
-      this.isTurn
+      this.isTurn,
+      this.allPlayersJoined
     );
   }
 

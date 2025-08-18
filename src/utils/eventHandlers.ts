@@ -11,9 +11,10 @@ export function registerCanvasEvents(
   onConfirm: () => void,
   socket: any,
   roomId: string,
-  isTurn: boolean
+  isTurn: boolean,
+  allPlayersJoined: boolean
 ): void {
-  if (!isTurn) {
+  if (!isTurn || !allPlayersJoined) {
     unregisterCanvasEvents(canvas);
     return;
   }

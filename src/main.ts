@@ -4,13 +4,15 @@ import { Player } from "./models/Player.js";
 
 const canvas = document.getElementById("canvas") as HTMLCanvasElement;
 const parts = location.pathname.split("/");
+
 const roomId = parts[2] || "lobby";
+export const name = localStorage.getItem("playerName") || "player";
+
 let goingFirst = true;
-let players: Player[] = [];
 
-const socket = (window as any).io();
+export const socket = (window as any).io();
 
-socket.emit("join_room", { roomId, name: "Player" });
+socket.emit("join_room", { roomId, name: name });
 
 socket.on("player_joined", (p: any) => {
   goingFirst = false;
