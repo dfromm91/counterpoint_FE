@@ -1,5 +1,5 @@
 export const gameStates = {};
-
+import { GameState } from "../models/gameState.js";
 export function registerGameSocketHandlers(io, socket) {
   // === JOIN ===
   socket.on("join_room", ({ roomId, name }) => {
